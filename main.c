@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:16:39 by emyildir          #+#    #+#             */
-/*   Updated: 2024/12/28 19:51:25 by emyildir         ###   ########.fr       */
+/*   Updated: 2024/12/28 23:30:54 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	print_objects(t_list *objlist)
 		{
 			t_ambient *ambient = objlist->content;
 			printf("%d - AMBIENT LIGHTNING: Light Ratio: %.2f RGB: %d,%d,%d\n", 
-				i, ambient->light_ratio, ambient->color.red, ambient->color.green, ambient->color.blue);
+				i, ambient->brightness, ambient->color.red, ambient->color.green, ambient->color.blue);
 		}
 		else if (type == CAMERA)
 		{

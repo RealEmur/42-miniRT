@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 15:25:05 by emyildir          #+#    #+#             */
-/*   Updated: 2024/12/28 19:08:43 by emyildir         ###   ########.fr       */
+/*   Updated: 2024/12/29 02:28:28 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,19 +68,21 @@ int		is_num(char *str)
 
 int		is_rgb(char *str)
 {
-	int		i;
-	int		is_rgb;
-	char	**splitted;
+	int			i;
+	int			is_rgb;
+	const int	size = ft_strlen(str);
+	char		**splitted;
 	
-	if (ft_strnstr(str, ",,", ft_strlen(str)))
+	if (ft_strnstr(str, ",,", size)
+		|| (*str == ',' || str[size - 1] == ','))
 		return (false);
-	i = -1;
 	is_rgb = true;
 	splitted = ft_split(str, ',');
 	if (!splitted)
 		return (false);
 	if (str_arr_size(splitted) != 3)
 		is_rgb = false;
+	i = -1;
 	while (is_rgb && splitted[++i])
 		if (!is_num(splitted[i]))
 			is_rgb = false;
