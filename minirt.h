@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:17:01 by emyildir          #+#    #+#             */
-/*   Updated: 2024/12/28 19:21:32 by emyildir         ###   ########.fr       */
+/*   Updated: 2024/12/28 19:49:30 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,5 +125,6 @@ t_object	*parse_light(char **props);
 t_object	*parse_sphere(char **props);
 t_object	*parse_plane(char **props);
 t_object	*parse_cylinder(char **props);
+int			validator(t_list	*objlist);
 
 #endif

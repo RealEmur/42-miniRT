@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:16:39 by emyildir          #+#    #+#             */
-/*   Updated: 2024/12/28 19:25:06 by emyildir         ###   ########.fr       */
+/*   Updated: 2024/12/28 19:51:25 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int main(int size, char **args)
     if (size == 2)
     {
 		objects = parser(args[1]);
-		if (!objects)
+		if (!objects || !validator(objects))
 			return (EXIT_FAILURE);
 		print_objects(objects);
 	}
