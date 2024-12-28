@@ -32,7 +32,7 @@ char	*get_line(char *file_data)
 	while (file_data[len])
 		if (file_data[len++] == '\n')
 			break ;
-	return (ft_substr(file_data, 0, len));
+	return (substr(file_data, 0, len));
 }
 
 char	*get_next_line(int fd)
@@ -44,13 +44,13 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || (!file_data[fd] && !set_initial_fdata(&file_data[fd])))
 		return (0);
-	while (file_data[fd] && !ft_strchr(file_data[fd], '\n'))
+	while (file_data[fd] && !strchr(file_data[fd], '\n'))
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read == 0 || bytes_read == -1)
 			break ;
 		buffer[bytes_read] = '\0';
-		swap_str_and_free(&file_data[fd], ft_strjoin(file_data[fd], buffer));
+		swap_str_and_free(&file_data[fd], strjoin(file_data[fd], buffer));
 	}
 	if (!file_data[fd] || !*file_data[fd] || bytes_read == -1)
 		return (free_fdata(&file_data[fd]));
@@ -58,7 +58,7 @@ char	*get_next_line(int fd)
 	if (!line)
 		return (free_fdata(&file_data[fd]));
 	swap_str_and_free(&file_data[fd], \
-	ft_substr(file_data[fd], ft_strlen(line), \
-	ft_strlen(file_data[fd]) - ft_strlen(line)));
+	substr(file_data[fd], strlen(line), \
+	strlen(file_data[fd]) - strlen(line)));
 	return (line);
 }
