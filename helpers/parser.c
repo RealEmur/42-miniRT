@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:59:26 by emyildir          #+#    #+#             */
-/*   Updated: 2024/12/28 18:56:12 by emyildir         ###   ########.fr       */
+/*   Updated: 2024/12/28 19:27:11 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,15 @@ t_object	*parse_object(char **props)
 		return (parse_ambient_lightning(props));
 	else if (!ft_strncmp(identifier, "C", 2))
 		return (parse_camera(props));
-	/*
 	else if (!ft_strncmp(identifier, "L", 2))
-		return (LIGHT);
+		return (parse_light(props));
 	else if (!ft_strncmp(identifier, "sp", 3))
-		return (SPHERE);
+		return (parse_sphere(props));
 	else if (!ft_strncmp(identifier, "pl", 3))
-		return (PLANE);
+		return (parse_plane(props));
 	else if (!ft_strncmp(identifier, "cy", 3))
-		return (CYLINDER); */
-	return (NULL);	
+		return (parse_cylinder(props));
+	return (panic("Scene File", ERR_SCENE_FORMAT, -1), NULL);
 }
 
 int	read_lines_from_scene(int fd, t_list **objects)

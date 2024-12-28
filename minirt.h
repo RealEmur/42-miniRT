@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:17:01 by emyildir          #+#    #+#             */
-/*   Updated: 2024/12/28 18:40:00 by emyildir         ###   ########.fr       */
+/*   Updated: 2024/12/28 19:21:32 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ typedef struct s_camera
 typedef struct s_light
 {
 	t_object_types	type;
-	float			light_ratio;
+	float			brightness;
 	t_rgb			color;
 	t_position		position;
 }	t_light;
@@ -92,11 +92,20 @@ typedef struct s_sphere
 typedef struct s_plane
 {
 	t_object_types	type;
+	t_rgb			color;
+	t_vector		vector;
+	t_position		position;
+}	t_plane;
+
+typedef struct s_cylinder
+{
+	t_object_types	type;
+	t_position		position;
+	t_vector		vector;
 	float			diameter;
 	float			height;
 	t_rgb			color;
-	t_position		position;
-}	t_plane;
+}	t_cylinder;
 
 int panic(char *tag, char *error, int rtrn_val);
 int	is_float(char *str);
@@ -112,5 +121,9 @@ int		is_num(char *str);
 t_rgb	strtorgb(char *str);
 t_object	*parse_ambient_lightning(char **props);
 t_object	*parse_camera(char **props);
+t_object	*parse_light(char **props);
+t_object	*parse_sphere(char **props);
+t_object	*parse_plane(char **props);
+t_object	*parse_cylinder(char **props);
 
 #endif
