@@ -1,3 +1,4 @@
 miniRT
 *.o
 *.a
+lib/mlx

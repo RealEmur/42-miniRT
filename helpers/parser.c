@@ -43,6 +43,7 @@ t_object	*parse_object(char **props, int line)
 
 int	parse_line(char *line, t_list **objects, int line_count)
 {
+	//A 0.2 255,255,255
 	char		*const	trimmed = ft_strtrim(line, "\n");
 	char		**splitted;
 	t_list		*lst;

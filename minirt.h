@@ -20,6 +20,7 @@
 
 #include "lib/libft/libft.h"
 #include "lib/gnl/get_next_line.h"
+#include "lib/mlx/mlx.h"
 
 #define ERR_USAGE "./miniRT <a scene file>"
 #define ERR_EXTENSION "Scene description files must have '.rt' extension"
@@ -61,6 +62,11 @@ typedef struct s_coords
 
 typedef t_coords t_position;
 typedef t_coords t_vector;
+
+typedef struct s_scene 
+{
+	
+}	t_scene;
 
 typedef struct s_object
 {

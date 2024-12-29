@@ -97,7 +97,9 @@ int main(int size, char **args)
 		objects = parser(args[1]);
 		if (!objects || !validator(objects))
 			return (EXIT_FAILURE);
+		//crate_scene();
 		print_objects(objects);
+		mlx_loop(NULL);
 	}
     else 
         return (panic("Usage", ERR_USAGE, EXIT_FAILURE));
