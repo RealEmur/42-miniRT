@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   objects.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: tkul <tkul@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 15:17:58 by emyildir          #+#    #+#             */
-/*   Updated: 2024/12/29 02:34:56 by emyildir         ###   ########.fr       */
+/*   Updated: 2024/12/29 19:06:53 by tkul             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	validate_props(char **props, char *types, int line)
 			return (parser_panic(line, props[i], ERR_RGB_RANGE), false);
 		if ((identifier == 'P' || identifier == 'V') && !is_coord(props[i]))
 			return (parser_panic(line, props[i], ERR_ARG_COORDINATE), false);
-		if (identifier == 'V' && !validate_vector(strtocoords(props[i])))
+		if (identifier == 'V' && !validate_vector(strtocoord(props[i])))
 			return (parser_panic(line, props[i], ERR_ARG_COORDINATE), false);
 		if (identifier == 'N' && !is_num(props[i]))
 			return (parser_panic(line, props[i], ERR_ARG_INTEGER), false);
@@ -65,8 +65,8 @@ t_object	*parse_camera(char **props, int line)
 	if (!camera)
 		return (panic(NULL, NULL, -1), NULL);
 	camera->type = CAMERA;
-	camera->position = strtocoords(props[1]);
-	camera->vector	= strtocoords(props[2]);
+	camera->position = strtocoord(props[1]);
+	camera->vector	= strtocoord(props[2]);
 	camera->fov	= ft_atoi(props[3]);
 	return ((t_object *)camera);
 }
@@ -81,7 +81,7 @@ t_object	*parse_light(char **props, int line)
 	if (!light)
 		return (panic(NULL, NULL, -1), NULL);
 	light->type = LIGHT;
-	light->position = strtocoords(props[1]);
+	light->position = strtocoord(props[1]);
 	light->brightness = strtofloat(props[2]);
 	light->color = strtorgb(props[3]);
 	return ((t_object *)light);
@@ -97,7 +97,7 @@ t_object	*parse_sphere(char **props, int line)
 	if (!sphere)
 		return (panic(NULL, NULL, -1), NULL);
 	sphere->type = SPHERE;
-	sphere->position = strtocoords(props[0]);
+	sphere->position = strtocoord(props[0]);
 	sphere->diameter = strtofloat(props[1]);
 	sphere->color = strtorgb(props[2]);
 	return ((t_object *)sphere);
@@ -113,8 +113,8 @@ t_object	*parse_plane(char **props, int line)
 	if (!plane)
 		return (panic(NULL, NULL, -1), NULL);
 	plane->type = PLANE;
-	plane->position = strtocoords(props[1]);
-	plane->vector = strtocoords(props[2]);
+	plane->position = strtocoord(props[1]);
+	plane->vector = strtocoord(props[2]);
 	plane->color = strtorgb(props[3]);
 	return ((t_object *)plane);
 }
@@ -129,8 +129,8 @@ t_object	*parse_cylinder(char **props, int line)
 	if (!cylinder)
 		return (panic(NULL, NULL, -1), NULL);
 	cylinder->type = CYLINDER;
-	cylinder->position = strtocoords(props[1]);
-	cylinder->vector = strtocoords(props[2]);
+	cylinder->position = strtocoord(props[1]);
+	cylinder->vector = strtocoord(props[2]);
 	cylinder->color = strtorgb(props[3]);
 	cylinder->diameter = strtofloat(props[4]);
 	cylinder->height = strtofloat(props[5]);

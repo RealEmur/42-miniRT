@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: tkul <tkul@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:17:01 by emyildir          #+#    #+#             */
-/*   Updated: 2024/12/29 02:29:53 by emyildir         ###   ########.fr       */
+/*   Updated: 2024/12/29 19:07:02 by tkul             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ typedef t_coords t_vector;
 
 typedef struct s_scene 
 {
-	
+	void	*mlx;
+	void	*mlx_win;
 }	t_scene;
 
 typedef struct s_object
@@ -131,7 +132,7 @@ int	str_arr_size(char **strs);
 void free_str_arr(char **strs);
 t_list *parser(char *path);
 float strtofloat(char *str);
-t_coords	strtocoords(char *str);
+t_coords	strtocoord(char *str);
 int		is_coord(char *str);
 int		is_num(char *str);
 t_rgb	strtorgb(char *str);
@@ -144,5 +145,7 @@ t_object	*parse_cylinder(char **props, int line);
 int			validator(t_list	*objlist);
 int			validate_vector(t_vector vector);
 int	validate_rgb(t_rgb rgb);
+void    init_mlx(t_scene *scene);
+int display_scene(t_scene *scene);
 
 #endif

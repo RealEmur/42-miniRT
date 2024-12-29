@@ -11,7 +11,7 @@ MLX = $(MLX_PATH)/libmlx.a
 MLX_FLAGS = -L$(MLX_PATH) -lmlx -lXext -lX11 -lm -lz
 
 HELPERS_PATH = ./helpers
-HELPERS = $(HELPERS_PATH)/parser.c $(HELPERS_PATH)/validator.c
+HELPERS = $(HELPERS_PATH)/parser.c $(HELPERS_PATH)/validator.c $(HELPERS_PATH)/window.c $(HELPERS_PATH)/scene.c
 
 UTILS_PATH = ./utils
 UTILS_PARSER_PATH = $(UTILS_PATH)/parser

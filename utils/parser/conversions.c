@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   conversions.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: tkul <tkul@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 15:25:05 by emyildir          #+#    #+#             */
-/*   Updated: 2024/12/29 02:28:28 by emyildir         ###   ########.fr       */
+/*   Updated: 2024/12/29 19:06:58 by tkul             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int		is_coord(char *str)
 	return (is_vector);
 }
 
-t_coords	strtocoords(char *str)
+t_coords	strtocoord(char *str)
 {
 	t_coords	coords;
 

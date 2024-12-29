@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: tkul <tkul@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:16:39 by emyildir          #+#    #+#             */
-/*   Updated: 2024/12/28 23:30:54 by emyildir         ###   ########.fr       */
+/*   Updated: 2024/12/29 19:05:09 by tkul             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,16 +91,17 @@ void	print_objects(t_list *objlist)
 int main(int size, char **args)
 {
 	t_list	*objects;	
-	
+	t_scene	*const scene = &(t_scene){0};
+
+
     if (size == 2)
     {
 		objects = parser(args[1]);
 		if (!objects || !validator(objects))
 			return (EXIT_FAILURE);
-		//crate_scene();
 		print_objects(objects);
-		mlx_loop(NULL);
-	}
+		display_scene(scene);
+	}	
     else 
         return (panic("Usage", ERR_USAGE, EXIT_FAILURE));
     return (EXIT_SUCCESS);
