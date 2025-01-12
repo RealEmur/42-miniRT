@@ -8,10 +8,10 @@ GNL = $(GNL_PATH)/gnl.a
 
 MLX_PATH = ./lib/mlx
 MLX = $(MLX_PATH)/libmlx.a
-MLX_FLAGS = -L$(MLX_PATH) -lmlx -lXext -lX11 -lm -lz
+MLX_FLAGS = -L$(MLX_PATH) -lmlx -lXext -lX11 -lm -lz -L/usr/X11R6/lib
 
 HELPERS_PATH = ./helpers
-HELPERS = $(HELPERS_PATH)/parser.c $(HELPERS_PATH)/validator.c $(HELPERS_PATH)/window.c $(HELPERS_PATH)/scene.c
+HELPERS = $(HELPERS_PATH)/parser.c $(HELPERS_PATH)/validator.c $(HELPERS_PATH)/window.c $(HELPERS_PATH)/scene.c $(HELPERS_PATH)/triangulate.c
 
 UTILS_PATH = ./utils
 UTILS_PARSER_PATH = $(UTILS_PATH)/parser
@@ -21,7 +21,7 @@ UTILS = $(UTILS_PARSER) $(UTILS_PATH)/strings.c
 
 SOURCES = main.c $(UTILS) $(HELPERS)
 
-CC = cc 
+CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 RM = rm -rf
@@ -29,7 +29,7 @@ RM = rm -rf
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(GNL) $(MLX) $(SOURCES)
-	$(CC) $(MLX_FLAGS) $(CFLAGS) $(SOURCES) $(LIBFT) $(GNL) $(MLX) -o $(NAME)
+	$(CC) $(CFLAGS) $(MLX_FLAGS) -o $(NAME) $(SOURCES) $(LIBFT) $(GNL) $(MLX) $(MLX_FLAGS)
 
 $(LIBFT):
 	make -C $(LIBFT_PATH)
@@ -49,7 +49,7 @@ $(MLX):
 
 clean:
 	make fclean -C $(LIBFT_PATH)
-	make fclean -C $(GNL_PATH) 
+	make fclean -C $(GNL_PATH)
 
 fclean: clean
 	$(RM) $(NAME)

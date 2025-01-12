@@ -104,7 +104,7 @@ t_list *ft_lstmerge(t_list *list1, t_list *list2)
     return (list1);
 }
 
-t_triangle *triangulate_plane_with_fov(
+/* t_triangle *triangulate_plane_with_fov(
     t_vector plane_position, 
     t_vector camera_position, 
     double fov_degrees, 
@@ -122,7 +122,7 @@ t_triangle *triangulate_plane_with_fov(
 
     return triangulate_plane(plane_position, plane_width, plane_height, subdivisions, num_triangles);
 }
-
+ */
 
 
 void triangulate(t_scene *scene, t_list *objects)
