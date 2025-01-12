@@ -97,9 +97,9 @@ t_object	*parse_sphere(char **props, int line)
 	if (!sphere)
 		return (panic(NULL, NULL, -1), NULL);
 	sphere->type = SPHERE;
-	sphere->position = strtocoord(props[0]);
-	sphere->diameter = strtofloat(props[1]);
-	sphere->color = strtorgb(props[2]);
+	sphere->position = strtocoord(props[1]);
+	sphere->diameter = strtofloat(props[2]);
+	sphere->color = strtorgb(props[3]);
 	return ((t_object *)sphere);
 }
 

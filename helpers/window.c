@@ -65,10 +65,21 @@ t_ray create_ray(t_scene *scene, t_vector factors)
 {
 	t_ray ray;
 	ray.origin = ((t_camera *)ft_lstfind(scene->objects, CAMERA))->position;
-	// printf("Camera position: %f, %f, %f\n", ray.origin.x, ray.origin.y, ray.origin.z);
 	ray.direction = Vector_normalize(Vector_add(factors, ((t_camera *)ft_lstfind(scene->objects, CAMERA))->vector));
-	// printf("Ray direction: %f, %f, %f\n", ray.direction.x, ray.direction.y, ray.direction.z);
 	return (ray);
+}
+
+
+bool intersect(t_ray *ray, t_list *triangles)
+{
+	t_triangle *triangle;
+	(void)ray;
+	while (triangles)
+	{
+		triangle = triangles->content;
+		triangles = triangles->next;
+	}
+	return (false);
 }
 
 void	render(t_scene *scene)
@@ -88,13 +99,13 @@ void	render(t_scene *scene)
 			closest.t = INFINITY;
 			closest.object = NULL;
 			closest.color = BLACK;
-			t_list *objects = scene->objects;
 			factors = canvas_to_viewport(coord.x, coord.y, scene);
-			// printf("Factors: %f, %f, %f\n", factors.x, factors.y, factors.z);
 			ray = create_ray(scene, factors);
-			// if (intersect(&ray, &closest, objects))
-			// 	closest.color = calculate_lightning(scene, &closest)
-			(void)objects;
+			if (intersect(&ray, scene->triangles))
+			{
+
+			}
+				/* closest.color = calculate_lightning(scene, &closest) */
 			(void)ray;
 			(void)closest;
 		}
@@ -120,19 +131,61 @@ void reset_canvas(void *canvas)
 
 int	render_next_frame(void *s)
 {
-	t_scene *scene = (t_scene *)s;
-	reset_canvas(scene->canvas);
-	render(scene);
+	t_scene *scene = (t_scene *) s;
+	if (scene->render_mode == RERENDER_REQUIRED)
+	{
+		reset_canvas(scene->canvas);
+		render(scene);
+	}
 	mlx_put_image_to_window(scene->mlx, scene->mlx_win, scene->canvas, 0, 0);
 	return (0);
 }
+
+// double my_fabs(double x) {
+//     if (x < 0) {
+//         return -x;  // Return the negative of x if x is negative
+//     }
+//     return x;  // Return x if it's already positive or zero
+// }
+
+// void draw_line(t_scene *scene, t_coords p1, t_coords p2, int color) {
+//     int dx = p2.x - p1.x;
+//     int dy = p2.y - p1.y;
+//     int steps;
+//     float x_increment, y_increment;
+//     float x = p1.x;
+//     float y = p1.y;
+
+//     steps = my_fabs(dx) > my_fabs(dy) ? my_fabs(dx) : my_fabs(dy);
+//     x_increment = dx / (float)steps;
+//     y_increment = dy / (float)steps;
+
+//     for (int i = 0; i <= steps; i++) {
+//         mlx_pixel_put(scene->mlx, scene->mlx_win, round(x), round(y), color);
+//         x += x_increment;
+//         y += y_increment;
+//     }
+// }
+
+// void draw_triangle(t_scene *scene, t_triangle *triangle) {
+//     draw_line(scene, triangle->p1, triangle->p2, 0xFFFFFF); // Beyaz renk
+//     draw_line(scene, triangle->p2, triangle->p3, 0xFFFFFF);
+//     draw_line(scene, triangle->p3, triangle->p1, 0xFFFFFF);
+// }
 
 void    init_mlx(t_scene *scene)
 {
     scene->mlx = mlx_init();
 	scene->mlx_win = mlx_new_window(scene->mlx, WIDTH, HEIGHT, "Hello world!");
-	void *canvas = mlx_new_image(scene->mlx, WIDTH, HEIGHT);
-	scene->canvas = canvas; 
+	scene->canvas = mlx_new_image(scene->mlx, WIDTH, HEIGHT);
+	// t_list *tmp = scene->triangles;
+	// while (tmp)
+	// {
+	// 	draw_triangle(scene, tmp->content);
+	// 	tmp = tmp->next;
+	// }
+	render(scene);
+	scene->render_mode = NOTHING;
 	mlx_loop_hook(scene->mlx, render_next_frame, scene);
 	mlx_loop(scene->mlx);
 } 	

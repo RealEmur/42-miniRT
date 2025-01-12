@@ -44,6 +44,12 @@
 #define WIDTH 1920
 #define HEIGHT 1080
 
+typedef enum e_render_modes
+{
+	NOTHING,
+	RERENDER_REQUIRED
+}	t_render_modes;
+
 typedef enum e_object_types
 {
 	OBJECT_NONE,
@@ -64,9 +70,9 @@ typedef struct s_rgb
 
 typedef struct s_coords
 {
-	float	x;
-	float	y;
-	float	z;
+	double	x;
+	double	y;
+	double	z;
 }	t_coords;
 
 typedef t_coords t_position;
@@ -82,8 +88,10 @@ typedef struct s_scene
 	void	*mlx;
 	void	*mlx_win;
 	void *canvas;
-	t_list	*objects;
-	t_viewport	viewport;
+	t_render_modes render_mode;
+	t_list			*objects;
+	t_list			*triangles;
+	t_viewport		viewport;
 }	t_scene;
 
 
@@ -155,10 +163,12 @@ typedef struct s_ray
 }	t_ray;
 
 typedef struct s_triangle {
-    t_vector vertex1;
-    t_vector vertex2;
-    t_vector vertex3;
+    t_vector	p1;
+    t_vector	p2;
+    t_vector	p3;
+	t_object	*object;
 } t_triangle;
+
 typedef struct s_hit
 {
 	t_object  *object;
@@ -197,8 +207,9 @@ void    init_mlx(t_scene *scene);
 int display_scene(t_scene *scene);
 void	print_objects(t_list *objlist);
 t_vector sphere_point(t_vector center, double radius, double theta, double phi);
-t_triangle *triangulate_sphere(t_vector center, double radius, int slices, int stacks, int *num_triangles);
-t_triangle *triangulate_plane(t_vector origin, double width, double height, int subdivisions, int *num_triangles);
-t_triangle *triangulate_cylinder(t_vector base, double radius, double height, int slices, int stacks, int *num_triangles);
+void triangulate_sphere(t_list **triangles, t_object *object, t_vector center, double radius, int slices, int stacks);
+t_vector Vector_normalize(t_vector v);
+void    triangulate_plane(t_list **triangles, t_object *object,t_vector origin,int subdivisions);
+void    triangulate_cylinder(t_list **triangles, t_object *object, t_vector base, double radius, double height, int slices, int stack);
 
 #endif

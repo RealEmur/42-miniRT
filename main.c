@@ -104,69 +104,36 @@ t_list *ft_lstmerge(t_list *list1, t_list *list2)
     return (list1);
 }
 
-/* t_triangle *triangulate_plane_with_fov(
-    t_vector plane_position, 
-    t_vector camera_position, 
-    double fov_degrees, 
-    double aspect_ratio, 
-    int subdivisions, 
-    int *num_triangles) 
+t_list *triangulate(t_list *objects)
 {
-    double distance = fabs(plane_position.z - camera_position.z);
-    double fov_radians = fov_degrees * M_PI / 180.0;
-    double plane_width = 2.0 * distance * tan(fov_radians / 2.0);
-    double plane_height = plane_width / aspect_ratio;
-
-    printf("Plane Width: %.2f\n", plane_width);
-    printf("Plane Height: %.2f\n", plane_height);
-
-    return triangulate_plane(plane_position, plane_width, plane_height, subdivisions, num_triangles);
-}
- */
-
-
-void triangulate(t_scene *scene, t_list *objects)
-{
-    int i;
     t_list *triangles;
     t_list *objects_copy;
+	t_sphere	*sphere;
+	t_cylinder *cylinder;
+	t_plane *plane;
 
     triangles = NULL;
     objects_copy = objects;
     while (objects_copy)
 	{
-        i = 0;
         if (((t_object *)objects_copy->content)->type == SPHERE)
 		{
-            ft_lstadd_back(&triangles, ft_lstnew(triangulate_sphere(
-                ((t_sphere *)objects_copy->content)->position,
-                ((t_sphere *)objects_copy->content)->diameter / 2,
-                10, 
-                10, 
-                &i)));
-        // }
-		// else if (((t_object *)objects_copy->content)->type == PLANE)
-		// {
-        //     ft_lstadd_back(&triangles, ft_lstnew(triangulate_plane(
-        //         ((t_plane *)objects_copy->content)->position,
-        //         ((t_plane *)objects_copy->content)->plane_widht,
-        //         ((t_plane *)objects_copy->content)->plane_height,
-        //         10,
-        //         &i)));
+			sphere = objects_copy->content;
+			triangulate_sphere(&triangles, (t_object *)sphere, sphere->position, sphere->diameter / 2, 5,5);
+		}
+		else if (((t_object *)objects_copy->content)->type == PLANE)
+		{
+			plane = objects_copy->content;
+			triangulate_plane(&triangles, (t_object *)plane, plane->position, 10);
         }
 		else if (((t_object *)objects_copy->content)->type == CYLINDER)
 		{
-            ft_lstadd_back(&triangles, ft_lstnew(triangulate_cylinder(
-                ((t_cylinder *)objects_copy->content)->position,
-                ((t_cylinder *)objects_copy->content)->diameter / 2,
-                ((t_cylinder *)objects_copy->content)->height,
-                10,
-                10,
-                &i)));
+			cylinder = objects_copy->content;
+			triangulate_cylinder(&triangles, (t_object*)cylinder, cylinder->position, cylinder->diameter / 2, cylinder->height, 10, 10);
         }
         objects_copy = objects_copy->next;
     }
-    scene->objects = ft_lstmerge(scene->objects, triangles);
+	return triangles;
 }
 
 int main(int size, char **args)
@@ -179,9 +146,8 @@ int main(int size, char **args)
 		objects = parser(args[1]);
 		if (!objects || !validator(objects))
 			return (EXIT_FAILURE);
-		// print_objects(objects);
 		scene->objects = objects;
-		triangulate(scene, objects);
+		scene->triangles = triangulate(objects);
 		display_scene(scene);
 	}	
     else 
