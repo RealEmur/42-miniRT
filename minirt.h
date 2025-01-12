@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkul <tkul@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: tugcekul <tugcekul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:17:01 by emyildir          #+#    #+#             */
-/*   Updated: 2024/12/29 19:07:02 by tkul             ###   ########.fr       */
+/*   Updated: 2025/01/11 14:32:21 by tugcekul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <fcntl.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <math.h>
 
 #include "lib/libft/libft.h"
 #include "lib/gnl/get_next_line.h"
@@ -34,6 +35,14 @@
 #define ERR_ARG_INTEGER "Arguement must be in (integer) format." 
 #define ERR_RGB_RANGE "RGB values must be between [0-255]."
 #define ERR_VECTOR_RANGE "Vector values must be between [-1.0,1.0]"
+
+# define BLACK		(t_color){0, 0, 0, 0}
+
+#define M_PI 3.14159265358979323846
+
+#define RADIAN(degree) ((degree) * M_PI / 180.0)
+#define WIDTH 1920
+#define HEIGHT 1080
 
 typedef enum e_object_types
 {
@@ -62,12 +71,21 @@ typedef struct s_coords
 
 typedef t_coords t_position;
 typedef t_coords t_vector;
+typedef struct s_viewport
+{
+	float	width;
+	float	height;
+}	t_viewport;
 
 typedef struct s_scene 
 {
 	void	*mlx;
 	void	*mlx_win;
+	void *canvas;
+	t_list	*objects;
+	t_viewport	viewport;
 }	t_scene;
+
 
 typedef struct s_object
 {
@@ -123,6 +141,36 @@ typedef struct s_cylinder
 	t_rgb			color;
 }	t_cylinder;
 
+typedef struct s_color {
+	int t;
+	int r;
+	int g;
+	int b;
+}	t_color;
+
+typedef struct s_ray
+{
+	t_vector	origin;
+	t_vector	direction;
+}	t_ray;
+
+typedef struct s_triangle {
+    t_vector vertex1;
+    t_vector vertex2;
+    t_vector vertex3;
+} t_triangle;
+typedef struct s_hit
+{
+	t_object  *object;
+	t_ray		ray;
+	t_vector	point;
+	t_vector	normal;
+	t_color	color;
+	double t;
+	t_triangle *triangles;
+}	t_hit;
+
+
 int panic(char *tag, char *error, int rtrn_val);
 void	parser_panic(int line, char *title, char *err);
 int	is_float(char *str);
@@ -147,5 +195,10 @@ int			validate_vector(t_vector vector);
 int	validate_rgb(t_rgb rgb);
 void    init_mlx(t_scene *scene);
 int display_scene(t_scene *scene);
+void	print_objects(t_list *objlist);
+t_vector sphere_point(t_vector center, double radius, double theta, double phi);
+t_triangle *triangulate_sphere(t_vector center, double radius, int slices, int stacks, int *num_triangles);
+t_triangle *triangulate_plane(t_vector origin, double width, double height, int subdivisions, int *num_triangles);
+t_triangle *triangulate_cylinder(t_vector base, double radius, double height, int slices, int stacks, int *num_triangles);
 
 #endif
