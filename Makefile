@@ -1,4 +1,4 @@
-NAME = miniRT
+NAME = cub3D
 
 LIBFT_PATH = ./lib/libft
 LIBFT = $(LIBFT_PATH)/libft.a 
@@ -11,7 +11,7 @@ MLX = $(MLX_PATH)/libmlx.a
 MLX_FLAGS = -L$(MLX_PATH) -lmlx -lXext -lX11 -lm -lz -L/usr/X11R6/lib
 
 HELPERS_PATH = ./helpers
-HELPERS = $(HELPERS_PATH)/parser.c $(HELPERS_PATH)/validator.c $(HELPERS_PATH)/window.c $(HELPERS_PATH)/scene.c $(HELPERS_PATH)/triangulate.c
+HELPERS = $(HELPERS_PATH)/parser.c $(HELPERS_PATH)/validator.c 
 
 UTILS_PATH = ./utils
 UTILS_PARSER_PATH = $(UTILS_PATH)/parser

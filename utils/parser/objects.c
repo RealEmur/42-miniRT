@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   objects.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkul <tkul@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 15:17:58 by emyildir          #+#    #+#             */
-/*   Updated: 2024/12/29 19:06:53 by tkul             ###   ########.fr       */
+/*   Updated: 2025/02/05 17:49:11 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	validate_props(char **props, char *types, int line)
 	return (1);
 }
 
-t_object	*parse_ambient(char **props, int line)
+/* t_object	*parse_ambient(char **props, int line)
 {
 	t_ambient	*ambient; 
 	
@@ -135,4 +135,4 @@ t_object	*parse_cylinder(char **props, int line)
 	cylinder->diameter = strtofloat(props[4]);
 	cylinder->height = strtofloat(props[5]);
 	return ((t_object *)cylinder);
-}
+} */

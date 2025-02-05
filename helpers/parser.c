@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:59:26 by emyildir          #+#    #+#             */
-/*   Updated: 2024/12/29 02:30:07 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/05 17:51:18 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	parser_panic(int line, char *title, char *err)
 	ft_putstr_fd(": ", STDERR_FILENO);
 	ft_putendl_fd(err, STDERR_FILENO);
 }
+
+/*
 
 t_object	*parse_object(char **props, int line)
 {
@@ -66,7 +68,7 @@ int	parse_line(char *line, t_list **objects, int line_count)
 	return (true);
 }
 
-int	parse_lines_from_file(int fd, t_list **objects)
+int	parse_lines_from_file(int fd)
 {
 	int			line_count;
 	char		*line;
@@ -83,19 +85,19 @@ int	parse_lines_from_file(int fd, t_list **objects)
 		free(line);
 	}
 	return (true);
-}
+} */
 
-t_list	*parser(char *path)
+int	parser(char *path, t_scene *scene)
 {
-	t_list	*objects;
+	int		fd;
 	
-	objects = NULL;
+	(void)scene;
 	if (!is_valid_extension(path))
-		return (panic(path, ERR_EXTENSION, -1), NULL);
-    const int	fd = open(path, O_RDONLY);
+		return (panic(path, ERR_EXTENSION, false), false);
+    fd = open(path, O_RDONLY);
     if (fd == -1)
-		return (panic(path, NULL, -1), NULL);
-	if (!parse_lines_from_file(fd, &objects))
-		return (ft_lstclear(&objects, free), NULL);
-    return (objects);   
+		return (panic(path, NULL, false), false);
+	/* if (!parse_lines_from_file(fd))
+		return (NULL); */
+    return (true);   
 }
