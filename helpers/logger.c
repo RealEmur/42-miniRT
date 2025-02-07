@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 23:52:22 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/05 23:53:08 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/07 13:01:39 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,27 @@ int panic(char *tag, char *error, int rtrn_val)
     return (rtrn_val);
 }
 
-void	parser_panic(int line, char *title, char *err)
+void	parser_panic(int type, int line, char *title, char *err)
 {
-	ft_putstr_fd("Error\nLine ", STDIN_FILENO);
-	ft_putnbr_fd(line, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putstr_fd(title, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putendl_fd(err, STDERR_FILENO);
+	int		fd;
+
+	if (type == ERROR)
+	{
+		fd = STDERR_FILENO;
+		ft_putendl_fd("Error", fd);
+	}
+	else if (type == WARNING)
+	{
+		fd = STDOUT_FILENO;
+		ft_putstr_fd("Warning: ", fd);
+	}
+	ft_putstr_fd("Line ", fd);
+	ft_putnbr_fd(line, fd);
+	ft_putstr_fd(": ", fd);
+	if (title)
+	{
+		ft_putstr_fd(title, fd);
+		ft_putstr_fd(": ", fd);
+	}
+	ft_putendl_fd(err, fd);
 }

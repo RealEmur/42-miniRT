@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 03:09:45 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/07 04:18:21 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/07 12:50:17 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,9 @@ int		extend_map(char **map, int width)
 			return (panic("Malloc", NULL, false));
 		j = -1;
 		while (map[i][++j])
-		{
 			temp[j] = map[i][j];
-			if (temp[j] == ' ')
-				temp[j] = '0';
-		}
 		while (j < width)
-			temp[j++] = '0';
+			temp[j++] = ' ';
 		free(map[i]);
 		map[i] = temp;
 	}

@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:17:01 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/07 04:30:51 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/07 14:13:10 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,14 @@
 #define ERR_SPACE_SEP "Elements can not be seperated by space only lines"
 #define ERR_MAP_NOTLAST "Map content must be last thing in the map file"
 #define ERR_INVALID_INDETIFIER "Identifier is not valid"
+#define ERR_MULTIPLE_TEXTURE "Map file contains multiple options for this texture"
+#define ERR_MULTIPLE_COLOR "Map file contains multiple color for this scene"
 
 #define TEXTURE_COUNT 4
 #define NORTH_TEXTURE 0
+#define WEST_TEXTURE 3
 #define EAST_TEXTURE 1
 #define SOUTH_TEXTURE 2
-#define WEST_TEXTURE 3
 
 #define COLOR_COUNT 2
 #define CEILING_COLOR 0
@@ -56,6 +58,12 @@
 #define RADIAN(degree) ((degree) * M_PI / 180.0)
 #define WIDTH 1920
 #define HEIGHT 1080
+
+typedef enum e_log_type
+{
+	WARNING,
+	ERROR
+}	t_log_type;
 
 typedef enum e_map_key
 {
@@ -90,7 +98,7 @@ typedef t_coords t_vector;
 typedef	struct	s_options
 {
 	char	*textures[TEXTURE_COUNT];
-	t_rgb	colors[COLOR_COUNT];
+	t_rgb	*colors[COLOR_COUNT];
 } t_options;
 
 typedef struct s_player
@@ -116,7 +124,7 @@ typedef struct s_scene
 
 
 int panic(char *tag, char *error, int rtrn_val);
-void	parser_panic(int line, char *title, char *err);
+void	parser_panic(int type, int line, char *title, char *err);
 int	is_float(char *str);
 int	is_rgb(char *str);
 int	validate_extension(char *path, char *extension);

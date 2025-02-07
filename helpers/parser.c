@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:59:26 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/07 04:29:15 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/07 13:00:34 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	parse_elements(int fd, t_scene *scene)
 			return (free(line), free(trimmed), panic("Split Failed", NULL, false));
 		type = get_line_type(trimmed, splitted);
 		if (type == MAPKEY_INVALID)
-			return (free(line), free(trimmed), free_str_arr(splitted), parser_panic(line_count, "Unrecognized Identifier", ERR_INVALID_INDETIFIER), false);
+			return (free(line), free(trimmed), free_str_arr(splitted), parser_panic(ERROR, line_count, "Unrecognized Identifier", ERR_INVALID_INDETIFIER), false);
 		else if (type != MAPKEY_NOTHING 
 			&& ((type < MAP_LAYOUT && !parse_element(scene, splitted, type, line_count))
 			|| (type == MAP_LAYOUT && !parse_map(scene, fd, trimmed, &line_count))))
@@ -101,7 +101,6 @@ int	parser(char *path, t_scene *scene)
 {
 	int		fd;
 	
-	(void)scene;
 	if (!validate_extension(path, MAP_FILE_EXTENSION))
 		return (panic(path, ERR_EXTENSION, false), false);
     fd = open(path, O_RDONLY);
