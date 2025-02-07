@@ -6,20 +6,26 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:59:26 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/07 13:00:34 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/07 17:03:13 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minirt.h"
 
-int	is_map_line(char *line)
+int	check_inputs(t_scene *scene)
 {
 	int		i;
 
+	if (!scene->map.layout)
+		return (panic("Map Required", ERR_MAP_REQUIRED, false));
 	i = -1;
-	while (line[++i])
-		if (!ft_strchr(MAP_MAPLAYOUT_CHARS, line[i]))
-			return (false);
+	while (++i < TEXTURE_COUNT)
+		if (!scene->options.textures[i])
+			return (panic("Textures", ERR_TEXTURE_MISSING, false));
+	i = -1;
+	while (++i < COLOR_COUNT)
+		if (!scene->options.colors[i])
+			return (panic("Colors", ERR_COLOR_MISSING, false));
 	return (true);
 }
 
@@ -106,7 +112,8 @@ int	parser(char *path, t_scene *scene)
     fd = open(path, O_RDONLY);
     if (fd == -1)
 		return (panic(path, NULL, false), false);
-	if (!parse_elements(fd, scene))
+	if (!parse_elements(fd, scene) 
+		|| !check_inputs(scene))
 		return (false);
     return (true);   
 }

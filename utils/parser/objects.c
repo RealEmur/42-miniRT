@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 15:17:58 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/07 14:32:52 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/08 01:30:01 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,7 @@ int parse_map(t_scene *scene, int fd, char *line, int *line_count)
 	line = get_next_line(fd);
 	if (line)
 		return (free(line), parser_panic(ERROR, ++(*line_count), "Map File", ERR_MAP_NOTLAST), false);
+	if (!validate_map(map_layout))
+		return (false);
 	return (true);
 }	

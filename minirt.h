@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:17:01 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/07 14:13:10 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/08 01:28:44 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 #include "lib/mlx/mlx.h"
 
 #define MAP_FILE_EXTENSION ".cub"
-#define MAP_MAPLAYOUT_CHARS " 01WNSE"
+#define MAP_LAYOUT_CHARS " 01WNSE"
 
 #define ERR_USAGE "./cub3D <a map file>"
 #define ERR_EXTENSION "Map description files must have '.cub' extension"
@@ -44,6 +44,11 @@
 #define ERR_INVALID_INDETIFIER "Identifier is not valid"
 #define ERR_MULTIPLE_TEXTURE "Map file contains multiple options for this texture"
 #define ERR_MULTIPLE_COLOR "Map file contains multiple color for this scene"
+#define ERR_MAP_REQUIRED "Couldn't find map layout in map file"
+#define ERR_TEXTURE_MISSING "There are missing textures in map file"
+#define ERR_COLOR_MISSING "There are missing colors in map file"
+#define ERR_MAP_INVALIDCHAR "Invalid char usage in map"
+#define ERR_MAP_PLAYER "There must be 1 player character in map"
 
 #define TEXTURE_COUNT 4
 #define NORTH_TEXTURE 0
@@ -146,6 +151,7 @@ int	str_append(char **s1, char *s2);
 char    **load_map(int fd, char *firstline, int *line_count);
 int		get_map_width(char **map);
 int		extend_map(char **map, int width);
-
+int	is_map_line(char *line);
+int	validate_map(char **map);
 
 #endif
