@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 19:29:14 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/05 17:51:52 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/07 02:12:42 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,9 @@ int	validate_rgb(t_rgb rgb)
 	return (true);
 }
 
-int	validate_vector(t_vector vector)
+int	validate_extension(char *path, char *extension)
 {
-	if ((vector.x < -1.0 || vector.x > 1.0) 
-		|| (vector.y < -1.0 || vector.y > 1.0)
-		|| (vector.z < -1.0 || vector.z > 1.0))
-		return (false);
-	return (true);
-}
+	const int	len = ft_strlen(path) - 4;
 
-
-int	validator(t_list	*objlist)
-{
-	(void) objlist;
-	return (true);
+	return (len >= 0 && !ft_strncmp(path + len, extension, 4));
 }

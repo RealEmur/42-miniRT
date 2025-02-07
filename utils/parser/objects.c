@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 15:17:58 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/05 17:49:11 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/07 04:30:20 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,58 @@ int	validate_props(char **props, char *types, int line)
 	while (++i < size + 1)
 	{
 		identifier = types[i - 1];
-		if (identifier == 'F' && !is_float(props[i]))
-			return (parser_panic(line, props[i], ERR_ARG_FLOAT), false);
+		if (identifier == 'X' && !validate_extension(props[i], ".xpm"))
+			return (parser_panic(line, props[i], ERR_ARG_XPM), false);
 		if (identifier == 'R' && !is_rgb(props[i]))
 			return (parser_panic(line, props[i], ERR_ARG_RGB), false);
 		if (identifier == 'R' && !validate_rgb(strtorgb(props[i])))
 			return (parser_panic(line, props[i], ERR_RGB_RANGE), false);
-		if ((identifier == 'P' || identifier == 'V') && !is_coord(props[i]))
-			return (parser_panic(line, props[i], ERR_ARG_COORDINATE), false);
-		if (identifier == 'V' && !validate_vector(strtocoord(props[i])))
-			return (parser_panic(line, props[i], ERR_ARG_COORDINATE), false);
-		if (identifier == 'N' && !is_num(props[i]))
-			return (parser_panic(line, props[i], ERR_ARG_INTEGER), false);
 	}
 	return (1);
 }
+
+int	parse_texture(t_scene *scene, char **props, int type, int line)
+{
+	char	**const texture = &scene->options.textures[type];
+	
+	if (!validate_props(props, "X", line))
+		return (false);
+	*texture = ft_strdup(props[1]);
+	if (!*texture)
+		return (panic("String Duplication", NULL, false));
+	return (true);
+}
+
+int	parse_color(t_scene *scene, char **props, int type, int line)
+{
+	t_rgb	*color = &scene->options.colors[type];
+	
+	if (!validate_props(props, "R", line))
+		return (false);
+	*color = strtorgb(props[1]);
+	return (true);
+}
+
+int parse_map(t_scene *scene, int fd, char *line, int *line_count)
+{
+	t_map	*const map = &scene->map;
+	char	**const map_layout = load_map(fd, line, line_count);
+
+	if (!map_layout)
+		return (panic("Reading Map", NULL, 0));
+	map->height = str_arr_size(map_layout);
+	map->width = get_map_width(map_layout);
+	extend_map(map_layout, map->width);
+	map->layout = map_layout;
+	for (int i = 0; map_layout[i]; i++)
+	{
+		printf("%s\n", map_layout[i]);
+	}
+	line = get_next_line(fd);
+	if (line)
+		return (free(line), parser_panic(++(*line_count), "Map File", ERR_MAP_NOTLAST), false);
+	return (true);
+}	
 
 /* t_object	*parse_ambient(char **props, int line)
 {

@@ -1,4 +1,4 @@
-miniRT
+cub3D
 *.o
 *.a
 lib/mlx
