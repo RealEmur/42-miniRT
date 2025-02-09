@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   objects.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: tugcekul <tugcekul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 15:17:58 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/08 01:30:01 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/08 20:28:39 by tugcekul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ int parse_map(t_scene *scene, int fd, char *line, int *line_count)
 		return (panic("Reading Map", NULL, 0));
 	map->height = str_arr_size(map_layout);
 	map->width = get_map_width(map_layout);
+	scene->mlx.win_width = map->width * TILE_SIZE;
+	scene->mlx.wid_height = map->height * TILE_SIZE;
 	extend_map(map_layout, map->width);
 	map->layout = map_layout;
 	line = get_next_line(fd);

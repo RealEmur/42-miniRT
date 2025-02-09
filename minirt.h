@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: tugcekul <tugcekul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:17:01 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/08 01:28:44 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/09 06:54:12 by tugcekul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,22 @@
 #define CEILING_COLOR 0
 #define FLOOR_COLOR 1
 
+#define WALL_CHAR '1'
+#define DOOR_CHAR 'D'
+#define FLOOR_CHAR '0'
+#define PLAYER_CHAR 'P'
+#define OUTSIDE_CHAR ' '
+
+#define WALL_COLOR 0xFF0000   // Red
+#define FLOORR_COLOR 0xFFFFFF  // White
+#define PLAYER_COLOR 0x00FF00 // Green
+#define OUTSIDE_COLOR 0x0000FF // Blue
+
+#define TILE_SIZE 32
+
 #define RADIAN(degree) ((degree) * M_PI / 180.0)
-#define WIDTH 1920
-#define HEIGHT 1080
+#define WIDTH 900
+#define HEIGHT 900
 
 typedef enum e_log_type
 {
@@ -109,7 +122,7 @@ typedef	struct	s_options
 typedef struct s_player
 {
 	t_position	position;
-	t_vector	rotation;
+	t_vector	direction;
 }	t_player;
 
 typedef struct s_map
@@ -119,9 +132,22 @@ typedef struct s_map
 	char	**layout;
 }	t_map;
 
+typedef struct s_mlx
+{
+	void	*mlx;
+	void	*win;
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		size_line;
+	int		win_width;
+	int		wid_height;
+}	t_mlx;
+
 typedef struct s_scene 
 {
 	t_map		map;
+	t_mlx		mlx;
 	t_player	player;
 	t_options	options;
 }	t_scene;
