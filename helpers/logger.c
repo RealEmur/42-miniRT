@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 23:52:22 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/07 13:01:39 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/09 08:08:11 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ void	parser_panic(int type, int line, char *title, char *err)
 		fd = STDOUT_FILENO;
 		ft_putstr_fd("Warning: ", fd);
 	}
+	else 
+		fd = STDERR_FILENO;
 	ft_putstr_fd("Line ", fd);
 	ft_putnbr_fd(line, fd);
 	ft_putstr_fd(": ", fd);

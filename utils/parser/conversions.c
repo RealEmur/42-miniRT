@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 15:25:05 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/07 02:29:12 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/09 10:43:51 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,9 @@ t_rgb	strtorgb(char *str)
 		return (rgb);
 	rgb.blue = ft_atoi(++str);
 	return (rgb);
+}
+
+int	rgbtouint(t_rgb rgb)
+{
+	return rgb.red * 65536 + rgb.blue * 256 + rgb.green;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tugcekul <tugcekul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:16:39 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/09 07:17:13 by tugcekul         ###   ########.fr       */
+/*   Updated: 2025/02/09 12:52:34 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ int	close_window(t_scene *scene)
 void init_scene(t_mlx *mlx)
 {
 	mlx->mlx = mlx_init();
-	mlx->win = mlx_new_window(mlx->mlx, mlx->win_width,mlx->wid_height, "Cub3D");
-	mlx->img = mlx_new_image(mlx->mlx, mlx->win_width, mlx->wid_height);
+	mlx->win = mlx_new_window(mlx->mlx, WIDTH, HEIGHT, "Cub3D");
+	mlx->img = mlx_new_image(mlx->mlx, WIDTH, HEIGHT);
 	mlx->addr = mlx_get_data_addr(mlx->img, &mlx->bits_per_pixel, &mlx->size_line, &(int){0});
 }
 
@@ -66,6 +66,7 @@ void find_player_position(t_scene *scene)
 					scene->player.position.x = j + 0.5;
 					scene->player.position.y = i + 0.5;
 					scene->player.position.z = 0;
+					scene->map.layout[i][j] = '0';
 					if (scene->player.position.z)
 						parser_panic(1, i, "Player", "Player position must be on the ground");
 				}
@@ -76,36 +77,7 @@ void find_player_position(t_scene *scene)
 	}
 }
 
-void fill_tile(t_mlx *mlx, int x, int y, char type)
-{
-	int i;
-	int j;
-	unsigned int *addr = (unsigned int *)mlx->addr;
-
-	i = 0;
-	while (i < TILE_SIZE)
-	{
-		j = 0;
-		while (j < TILE_SIZE)
-		{
-			int pos = ((((y * TILE_SIZE) + j) * mlx->size_line) + (((x * TILE_SIZE) + i) * (mlx->bits_per_pixel / 8))) / 4;
-			if (type == WALL_CHAR)
-				addr[pos]= 0xFF0000;
-			else if (type == FLOOR_CHAR)
-				addr[pos] = 0xFFFFFF;
-			else if (type == PLAYER_CHAR)
-				addr[pos] = 0xFF0000;
-			else if (type == OUTSIDE_CHAR)
-				addr[pos] = 0x0000FF;
-			else if (type == 'H')
-				addr[pos] = 0x00FF00;		
-			j++;
-		}
-		i++;
-	}
-}
-
-void draw_line(t_mlx *mlx, int x0, int y0, int x1, int y1, int color)
+void draw_line(t_mlx *mlx, int x0, int y0, int x1, int y1, unsigned int color)
 {
     int dx = abs(x1 - x0);
     int dy = abs(y1 - y0);
@@ -116,15 +88,9 @@ void draw_line(t_mlx *mlx, int x0, int y0, int x1, int y1, int color)
 
     while (1)
     {
-        // Pikseli çiz
-        if (x0 >= 0 && x0 < mlx->win_width && y0 >= 0 && y0 < mlx->wid_height)
-        {
-            int pos = (y0 * mlx->size_line + x0 * (mlx->bits_per_pixel / 8)) / 4;
-            unsigned int *addr = (unsigned int *)mlx->addr;
-            addr[pos] = color;
-        }
+        draw_pixel(mlx, x0, y0, color);
 
-        // Bitiş noktasına ulaştıysak döngüden çık
+        // Break loop if end point is reached
         if (x0 == x1 && y0 == y1)
             break;
 
@@ -142,31 +108,41 @@ void draw_line(t_mlx *mlx, int x0, int y0, int x1, int y1, int color)
     }
 }
 
+void draw_pixel(t_mlx *mlx, int x, int y, unsigned int color)
+{
+	unsigned int	*addr = (unsigned int *)mlx->addr;
+	const int		pos = (y * mlx->size_line + x * (mlx->bits_per_pixel / 8)) / 4;
+	
+	addr[pos]= color;
+}
+
 void ft_render_map(t_scene *scene)
 {
-    int		x;
-	int		y;
-	char	**map = scene->map.layout;
-	
-	y = -1;
-	while (++y < scene->map.height)
-	{
-		x = -1;
-		while (++x < scene->map.width)
-			fill_tile(&scene->mlx, x, y, map[y][x]);
-	}
 	t_player *player = &scene->player;
-	player->direction.x = 1;
-	player->direction.y = -1;
-	double planeX = -player->direction.y * 0.66;
-	double planeY = player->direction.x * 0.66;
+	char	**const map = scene->map.layout;
+	int	planeX = player->plane.x;
+	int	planeY = player->plane.y;
+	int		x;
+	int		y;
 
-    for (int screenX = 0; screenX < scene->mlx.win_width; screenX++)
-    {
-        double cameraX = 2 * screenX / (double)scene->mlx.win_width - 1; // X-coordinate in camera space
+	x = -1;
+	while (++x < WIDTH)
+	{
+		y = -1;
+		while (++y < HEIGHT)
+		{
+			if (y < HEIGHT / 2)
+				draw_pixel(&scene->mlx, x, y, rgbtouint(*scene->options.colors[CEILING_COLOR]));
+			else 
+				draw_pixel(&scene->mlx, x, y, rgbtouint(*scene->options.colors[FLOOR_COLOR]));
+		}	
+	}
+
+    for (int screenX = 0; screenX < WIDTH; screenX++)
+    { 
+        double cameraX = 2 * screenX / (double)WIDTH - 1; // X-coordinate in camera space
         double rayDirX = player->direction.x + planeX * cameraX;
         double rayDirY = player->direction.y + planeY * cameraX;
-		printf("RayDirX: %f, RayDirY: %f\n", rayDirX, rayDirY);
 
         int mapX = (int)player->position.x;
         int mapY = (int)player->position.y;
@@ -176,9 +152,6 @@ void ft_render_map(t_scene *scene)
         double deltaDistY = (rayDirY == 0) ? 1e30 : fabs(1 / rayDirY);
 
         int stepX, stepY;
-        int hit = 0; // Was there a wall hit?
-
-        // Calculate step and initial sideDist
         if (rayDirX < 0)
         {
             stepX = -1;
@@ -199,38 +172,98 @@ void ft_render_map(t_scene *scene)
             stepY = 1;
             sideDistY = (mapY + 1.0 - player->position.y) * deltaDistY;
         }
-
-        // Perform DDA
-        while (hit == 0)
+		int side;
+        while (1)
         {
             if (sideDistX < sideDistY)
             {
                 sideDistX += deltaDistX;
                 mapX += stepX;
+				side = 0;
             }
             else
             {
                 sideDistY += deltaDistY;
+				side = 1;
                 mapY += stepY;
             }
-			draw_line(&scene->mlx, (int)player->position.x*TILE_SIZE, (int)player->position.y*TILE_SIZE, mapX * TILE_SIZE, mapY * TILE_SIZE, 0x000000);
+			if (map[mapY][mapX] == '1') 
+			{	
+				int		perpWallDist;
+				if(side == 0) 
+					perpWallDist = (sideDistX - deltaDistX);
+      			else 
+				    perpWallDist = (sideDistY - deltaDistY);
 
-			if (scene->map.layout[mapY][mapX] == '1') // Wall hit
-			{
-				hit = 1;
-				printf("Hit at %d, %d\n", mapX, mapY);
-				fill_tile(&scene->mlx, mapX, mapY, 'H');
-				mlx_put_image_to_window(scene->mlx.mlx, scene->mlx.win, scene->mlx.img, 0, 0);
+				 int lineHeight = (int)(HEIGHT / perpWallDist);
 
+				int drawStart = -lineHeight / 2 + HEIGHT / 2;
+				if (drawStart < 0)
+					drawStart = 0;
+				int drawEnd = lineHeight / 2 + HEIGHT / 2;
+				if (drawEnd >= HEIGHT)
+					drawEnd = HEIGHT - 1;
+				if (side == 1)
+					draw_line(&scene->mlx, screenX, drawStart, screenX, drawEnd, 0xFFFF00);
+				else 
+					draw_line(&scene->mlx, screenX, drawStart, screenX, drawEnd, 0xFFDD00);
+				break;
 			}
         }
 	}
+}
+
+int	on_key_press(int keycode, void *param)
+{
+	t_scene	*const scene = param;
+	char **map = scene->map.layout;
+	double *posX = &scene->player.position.x;
+	double *posY = &scene->player.position.y;
+	double *dirX = &scene->player.direction.x;
+	double *dirY = &scene->player.direction.y;
+	double	*planeX = &scene->player.plane.x;
+	double	*planeY = &scene->player.plane.y;
+	if (keycode == KEY_W)
+	{
+		if(map[(int)(*posX + *dirX * .2)][(int)(*posY)] == '0') *posX += *dirX * .2;
+    	if(map[(int)(*posX)][(int)(*posY + *dirY * .2)] == '0') *posY += *dirY * .2;
+		printf("sa\n");
+	}
+	else if (keycode == KEY_A)
+	{
+		double oldDirX = *dirX;
+		double oldPlaneX = *planeX;
+		*dirX = *dirX * cos(30) - *dirY * sin(30);
+		*dirY = oldDirX * sin(30) + *dirY * cos(30);
+		*planeX = *planeX * cos(30) - *planeY * sin(30);
+		*planeY = oldPlaneX * sin(30) + *planeY * cos(30);
+	}
+	else if (keycode == KEY_S)
+	{
+		if(map[(int)(*posX - *dirX * .2)][(int)(*posY)] == '0') *posX -= *dirX * .2;
+    	if(map[(int)(*posX)][(int)(*posY - *dirY * .2)] == '0') *posY -= *dirY * .2;
+	}
+	else if (keycode == KEY_D)
+	{
+		double oldDirX = *dirX;
+		double oldPlaneX = *planeX;
+		*dirX = *dirX * cos(-30) - *dirY * sin(-30);
+		*dirY = oldDirX * sin(-30) + *dirY * cos(-30);
+		*planeX = *planeX * cos(-30) - *planeY * sin(-30);
+		*planeY = oldPlaneX * sin(-30) + *planeY * cos(-30);
+	}
+	ft_render_map(scene);
+	mlx_put_image_to_window(scene->mlx.mlx, scene->mlx.win, scene->mlx.img, 0, 0);
+	return 1;
 }
 
 int main(int size, char **args)
 {
 	t_scene	*const scene = &(t_scene){0};
 	printf("scene %p\n", scene);
+	scene->player.direction.x = 1;
+	scene->player.direction.y = 0;
+	scene->player.plane.y = .66;
 	if (size == 2)
 	{
 		if (!parser(args[1], scene))
@@ -239,6 +272,7 @@ int main(int size, char **args)
 		init_scene(&scene->mlx);
 		ft_render_map(scene);
 		mlx_put_image_to_window(scene->mlx.mlx, scene->mlx.win, scene->mlx.img, 0, 0);
+		mlx_key_hook(scene->mlx.win, on_key_press, scene);
 		mlx_hook(scene->mlx.win, 17, 0, close_window, scene);
 		mlx_loop(scene->mlx.mlx);
 	}	

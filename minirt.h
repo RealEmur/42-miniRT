@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tugcekul <tugcekul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:17:01 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/09 06:54:12 by tugcekul         ###   ########.fr       */
+/*   Updated: 2025/02/09 12:45:25 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,18 @@
 #define WIDTH 900
 #define HEIGHT 900
 
+#define KEY_W 119
+#define KEY_A 97
+#define KEY_S 115
+#define KEY_D 100
+#define KEY_UP 65362
+#define KEY_DOWN 65364
+#define KEY_LEFT 65361
+#define KEY_RIGHT 65363
+
+
+
+
 typedef enum e_log_type
 {
 	WARNING,
@@ -123,6 +135,7 @@ typedef struct s_player
 {
 	t_position	position;
 	t_vector	direction;
+	t_vector	plane;
 }	t_player;
 
 typedef struct s_map
@@ -179,5 +192,7 @@ int		get_map_width(char **map);
 int		extend_map(char **map, int width);
 int	is_map_line(char *line);
 int	validate_map(char **map);
+int	rgbtouint(t_rgb rgb);
+void draw_pixel(t_mlx *mlx, int x, int y, unsigned int color);
 
 #endif
