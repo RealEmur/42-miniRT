@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:16:39 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/09 12:52:34 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/12 16:36:33 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,8 @@ void draw_line(t_mlx *mlx, int x0, int y0, int x1, int y1, unsigned int color)
     while (1)
     {
         draw_pixel(mlx, x0, y0, color);
-
-        // Break loop if end point is reached
         if (x0 == x1 && y0 == y1)
             break;
-
         e2 = 2 * err;
         if (e2 > -dy)
         {
@@ -120,8 +117,8 @@ void ft_render_map(t_scene *scene)
 {
 	t_player *player = &scene->player;
 	char	**const map = scene->map.layout;
-	int	planeX = player->plane.x;
-	int	planeY = player->plane.y;
+	double	planeX = player->plane.x;
+	double	planeY = player->plane.y;
 	int		x;
 	int		y;
 
@@ -140,9 +137,9 @@ void ft_render_map(t_scene *scene)
 
     for (int screenX = 0; screenX < WIDTH; screenX++)
     { 
-        double cameraX = 2 * screenX / (double)WIDTH - 1; // X-coordinate in camera space
+        double cameraX = 2 * screenX / (double)WIDTH - 1;
         double rayDirX = player->direction.x + planeX * cameraX;
-        double rayDirY = player->direction.y + planeY * cameraX;
+        double rayDirY = player->direction.y + planeY * cameraX; 
 
         int mapX = (int)player->position.x;
         int mapY = (int)player->position.y;
@@ -189,7 +186,7 @@ void ft_render_map(t_scene *scene)
             }
 			if (map[mapY][mapX] == '1') 
 			{	
-				int		perpWallDist;
+				double	perpWallDist;
 				if(side == 0) 
 					perpWallDist = (sideDistX - deltaDistX);
       			else 
@@ -217,40 +214,51 @@ int	on_key_press(int keycode, void *param)
 {
 	t_scene	*const scene = param;
 	char **map = scene->map.layout;
-	double *posX = &scene->player.position.x;
-	double *posY = &scene->player.position.y;
-	double *dirX = &scene->player.direction.x;
-	double *dirY = &scene->player.direction.y;
-	double	*planeX = &scene->player.plane.x;
-	double	*planeY = &scene->player.plane.y;
+	double *posX = &(scene->player.position.x);
+	double *posY = &(scene->player.position.y);
+	double *dirX = &(scene->player.direction.x);
+	double *dirY = &(scene->player.direction.y);
+	double	*planeX = &(scene->player.plane.x);
+	double	*planeY = &(scene->player.plane.y);
 	if (keycode == KEY_W)
 	{
-		if(map[(int)(*posX + *dirX * .2)][(int)(*posY)] == '0') *posX += *dirX * .2;
-    	if(map[(int)(*posX)][(int)(*posY + *dirY * .2)] == '0') *posY += *dirY * .2;
+
+		if(map[(int)(*posY + *dirY)][(int)*posX] == '0') *posY += *dirY;
+    	if(map[(int)(*posY)][(int)(*posX + *dirX)] == '0') *posX += *dirX;
 		printf("sa\n");
 	}
-	else if (keycode == KEY_A)
+	else if (keycode == KEY_A) // SOLA DÖNÜŞ
 	{
+		double angle = 10 * M_PI / 180.0;  // 10 derece dönüş
+		double cosA = cos(angle);
+		double sinA = sin(angle);
+
 		double oldDirX = *dirX;
 		double oldPlaneX = *planeX;
-		*dirX = *dirX * cos(30) - *dirY * sin(30);
-		*dirY = oldDirX * sin(30) + *dirY * cos(30);
-		*planeX = *planeX * cos(30) - *planeY * sin(30);
-		*planeY = oldPlaneX * sin(30) + *planeY * cos(30);
+
+		*dirX = oldDirX * cosA - *dirY * sinA;
+		*dirY = oldDirX * sinA + *dirY * cosA;
+		*planeX = oldPlaneX * cosA - *planeY * sinA;
+		*planeY = oldPlaneX * sinA + *planeY * cosA;
 	}
-	else if (keycode == KEY_S)
+	if (keycode == KEY_S)
 	{
-		if(map[(int)(*posX - *dirX * .2)][(int)(*posY)] == '0') *posX -= *dirX * .2;
-    	if(map[(int)(*posX)][(int)(*posY - *dirY * .2)] == '0') *posY -= *dirY * .2;
+		if(map[(int)(*posY - *dirY)][(int)(*posX)] == '0') *posY -= *dirY;
+    	if(map[(int)(*posY)][(int)(*posX - *dirX)] == '0') *posX -= *dirX;
 	}
-	else if (keycode == KEY_D)
+	else if (keycode == KEY_D) // SAĞA DÖNÜŞ
 	{
+		double angle = -10 * M_PI / 180.0;  // -10 derece sağa dönüş
+		double cosA = cos(angle);
+		double sinA = sin(angle);
+
 		double oldDirX = *dirX;
 		double oldPlaneX = *planeX;
-		*dirX = *dirX * cos(-30) - *dirY * sin(-30);
-		*dirY = oldDirX * sin(-30) + *dirY * cos(-30);
-		*planeX = *planeX * cos(-30) - *planeY * sin(-30);
-		*planeY = oldPlaneX * sin(-30) + *planeY * cos(-30);
+
+		*dirX = oldDirX * cosA - *dirY * sinA;
+		*dirY = oldDirX * sinA + *dirY * cosA;
+		*planeX = oldPlaneX * cosA - *planeY * sinA;
+		*planeY = oldPlaneX * sinA + *planeY * cosA;
 	}
 	ft_render_map(scene);
 	mlx_put_image_to_window(scene->mlx.mlx, scene->mlx.win, scene->mlx.img, 0, 0);
@@ -260,9 +268,9 @@ int	on_key_press(int keycode, void *param)
 int main(int size, char **args)
 {
 	t_scene	*const scene = &(t_scene){0};
-	printf("scene %p\n", scene);
-	scene->player.direction.x = 1;
+	scene->player.direction.x = -1;
 	scene->player.direction.y = 0;
+	scene->player.plane.x = 0;
 	scene->player.plane.y = .66;
 	if (size == 2)
 	{
