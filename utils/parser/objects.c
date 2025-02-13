@@ -6,7 +6,7 @@
 /*   By: tugcekul <tugcekul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 15:17:58 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/13 13:28:58 by tugcekul         ###   ########.fr       */
+/*   Updated: 2025/02/13 18:48:22 by tugcekul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,17 @@ int	validate_props(char **props, char *types, int line)
 
 int	parse_texture(t_scene *scene, char **props, int type, int line)
 {
-	char	**const texture = &scene->options.textures[type - 2];
+	t_texture	*const texture = &scene->options.textures[type - 2];
 	
 	if (!validate_props(props, "X", line))
 		return (false);
-	if (*texture)
+	if (texture->path)
 	{
 		parser_panic(WARNING, line, "Multiple Texture", ERR_MULTIPLE_TEXTURE);
-		free(*texture);
+		free(texture->path);
 	}
-	*texture = ft_strdup(props[1]);
-	if (!*texture)
+	texture->path = ft_strdup(props[1]);
+	if (!texture->path)
 		return (panic("String Duplication", NULL, false));
 	return (true);
 }

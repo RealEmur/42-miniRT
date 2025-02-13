@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:17:01 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/13 21:47:44 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/13 23:50:19 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,9 +140,17 @@ typedef t_coords t_vector;
 typedef unsigned long long t_timestamp;
 typedef struct timeval	t_timeval;
 
+typedef struct s_texture
+{
+	char	*path;
+	int		width;
+	int		height;
+	void   *img;
+	int		*addr;
+}	t_texture;
 typedef	struct	s_options
 {
-	char	*textures[TEXTURE_COUNT];
+	t_texture textures[TEXTURE_COUNT];
 	t_rgb	*colors[COLOR_COUNT];
 } t_options;
 
