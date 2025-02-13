@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tugcekul <tugcekul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:17:01 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/13 16:32:04 by tugcekul         ###   ########.fr       */
+/*   Updated: 2025/02/13 21:47:44 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,14 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
+#include <sys/time.h>
 
 #include "lib/libft/libft.h"
 #include "lib/gnl/get_next_line.h"
 #include "lib/mlx/mlx.h"
 
 #define MAP_FILE_EXTENSION ".cub"
-#define MAP_LAYOUT_CHARS "$01WNSE"
+#define MAP_LAYOUT_CHARS " $01WNSE"
 
 #define ERR_USAGE "./cub3D <a map file>"
 #define ERR_EXTENSION "Map description files must have '.cub' extension"
@@ -92,7 +93,7 @@
 #define KEY_RIGHT 65363
 #define KEY_ESC 65307
 
-
+#define PLAYER_RADIUS 0.2
 
 
 typedef enum e_log_type
@@ -100,6 +101,12 @@ typedef enum e_log_type
 	WARNING,
 	ERROR
 }	t_log_type;
+
+typedef enum e_cursor
+{
+	CURSOR_FREE,
+	CURSOR_LOCKED
+}	t_cursor;
 
 typedef enum e_map_key
 {
@@ -130,6 +137,8 @@ typedef struct t_coords
 
 typedef t_coords t_position;
 typedef t_coords t_vector;
+typedef unsigned long long t_timestamp;
+typedef struct timeval	t_timeval;
 
 typedef	struct	s_options
 {
@@ -169,6 +178,9 @@ typedef struct s_scene
 	t_mlx		mlx;
 	t_player	player;
 	t_options	options;
+	t_cursor	cursor;
+	t_list		*pressed_keys;
+	t_timestamp	last_tick;
 }	t_scene;
 
 
@@ -201,5 +213,9 @@ int	validate_map(char **map);
 int	rgbtouint(t_rgb rgb);
 void draw_pixel(t_mlx *mlx, int x, int y, unsigned int color);
 void find_player_position(t_scene *scene);
+int	on_key_press(int keycode, void *param);
+int	on_key_release(int keycode, void *param);
+int	is_key_pressed(t_list *pressed_keys, int keycode);
+t_timestamp	get_timestamp(void);
 
 #endif

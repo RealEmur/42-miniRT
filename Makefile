@@ -11,13 +11,13 @@ MLX = $(MLX_PATH)/libmlx.a
 MLX_FLAGS = -L$(MLX_PATH) -lmlx -lXext -lX11 -lm -lz -L/usr/X11R6/lib
 
 HELPERS_PATH = ./helpers
-HELPERS = $(HELPERS_PATH)/parser.c $(HELPERS_PATH)/validator.c $(HELPERS_PATH)/logger.c 
+HELPERS = $(HELPERS_PATH)/parser.c $(HELPERS_PATH)/validator.c $(HELPERS_PATH)/logger.c  $(HELPERS_PATH)/keys.c
 
 UTILS_PATH = ./utils
 UTILS_PARSER_PATH = $(UTILS_PATH)/parser
 UTILS_PARSER = $(UTILS_PARSER_PATH)/conversions.c $(UTILS_PARSER_PATH)/objects.c $(UTILS_PARSER_PATH)/map.c
 
-UTILS = $(UTILS_PARSER) $(UTILS_PATH)/strings.c
+UTILS = $(UTILS_PARSER) $(UTILS_PATH)/strings.c $(UTILS_PATH)/timestamp.c
 
 SOURCES = main.c $(UTILS) $(HELPERS)
 

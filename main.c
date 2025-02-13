@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tugcekul <tugcekul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:16:39 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/13 16:44:18 by tugcekul         ###   ########.fr       */
+/*   Updated: 2025/02/13 21:52:43 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,9 +202,11 @@ void ft_render_map(t_scene *scene)
 	}
 }
 
-int	on_key_press(int keycode, void *param)
+int	move(void *param, double delta_time)
 {
 	t_scene	*const scene = param;
+	t_list	*pressed_keys = scene->pressed_keys;
+	
 	char **map = scene->map.layout;
 	double *posX = &(scene->player.position.x);
 	double *posY = &(scene->player.position.y);
@@ -213,33 +215,68 @@ int	on_key_press(int keycode, void *param)
 	double	*planeX = &(scene->player.plane.x);
 	double	*planeY = &(scene->player.plane.y);
 		
-	if (keycode == KEY_ESC)
+	if (is_key_pressed(pressed_keys, KEY_ESC))
 		close_window(scene);
-	if (keycode == KEY_W)
-	{
+	float moveSpeed = 3 * delta_time;
 
-		if(map[(int)(*posY + *dirY)][(int)*posX] == '0') *posY += *dirY * .5;
-    	if(map[(int)(*posY)][(int)(*posX + *dirX)] == '0') *posX += *dirX * .5;
-		printf("sa\n");
+	if (is_key_pressed(pressed_keys, KEY_W)) {
+		float newY = *posY + (*dirY * moveSpeed);
+		float newX = *posX + (*dirX * moveSpeed);
+
+		if (map[(int)(newY + PLAYER_RADIUS)][(int)(*posX)] == '0' && 
+			map[(int)(newY - PLAYER_RADIUS)][(int)(*posX)] == '0') {
+			*posY = newY;
+		}
+		if (map[(int)(*posY)][(int)(newX + PLAYER_RADIUS)] == '0' && 
+			map[(int)(*posY)][(int)(newX - PLAYER_RADIUS)] == '0') {
+			*posX = newX;
+		}
 	}
-	else if (keycode == KEY_A)
-	{
-		if (map[(int)(*posY)][(int)(*posX - *dirY)] == '0') *posX -= *dirY * .5;
-		if (map[(int)(*posY + *dirX)][(int)(*posX)] == '0') *posY += *dirX * .5;
+
+	if (is_key_pressed(pressed_keys, KEY_A)) {
+		float newX = *posX - (*dirY * moveSpeed);
+		float newY = *posY + (*dirX * moveSpeed);
+
+		if (map[(int)(*posY)][(int)(newX + PLAYER_RADIUS)] == '0' && 
+			map[(int)(*posY)][(int)(newX - PLAYER_RADIUS)] == '0') {
+			*posX = newX;
+		}
+		if (map[(int)(newY + PLAYER_RADIUS)][(int)(*posX)] == '0' && 
+			map[(int)(newY - PLAYER_RADIUS)][(int)(*posX)] == '0') {
+			*posY = newY;
+		}
 	}
-	if (keycode == KEY_S)
-	{
-		if(map[(int)(*posY - *dirY)][(int)(*posX)] == '0') *posY -= *dirY * .5;
-    	if(map[(int)(*posY)][(int)(*posX - *dirX)] == '0') *posX -= *dirX * .5;
+
+	if (is_key_pressed(pressed_keys, KEY_S)) {
+		float newY = *posY - (*dirY * moveSpeed);
+		float newX = *posX - (*dirX * moveSpeed);
+
+		if (map[(int)(newY + PLAYER_RADIUS)][(int)(*posX)] == '0' && 
+			map[(int)(newY - PLAYER_RADIUS)][(int)(*posX)] == '0') {
+			*posY = newY;
+		}
+		if (map[(int)(*posY)][(int)(newX + PLAYER_RADIUS)] == '0' && 
+			map[(int)(*posY)][(int)(newX - PLAYER_RADIUS)] == '0') {
+			*posX = newX;
+		}
 	}
-	else if (keycode == KEY_D)
-	{
-		if(map[(int)(*posY)][(int)(*posX + *dirY)] == '0') *posX += *dirY * .5;
-		if(map[(int)(*posY - *dirX)][(int)(*posX)] == '0') *posY -= *dirX * .5;
+
+	if (is_key_pressed(pressed_keys, KEY_D)) {
+		float newX = *posX + (*dirY * moveSpeed);
+		float newY = *posY - (*dirX * moveSpeed);
+
+		if (map[(int)(*posY)][(int)(newX + PLAYER_RADIUS)] == '0' && 
+			map[(int)(*posY)][(int)(newX - PLAYER_RADIUS)] == '0') {
+			*posX = newX;
+		}
+		if (map[(int)(newY + PLAYER_RADIUS)][(int)(*posX)] == '0' && 
+			map[(int)(newY - PLAYER_RADIUS)][(int)(*posX)] == '0') {
+			*posY = newY;
+		}
 	}
-	if (keycode == KEY_RIGHT)
+	if (is_key_pressed(pressed_keys, KEY_RIGHT))
 	{
-		double angle = -10 * M_PI / 180.0;
+		double angle = -180 * M_PI / 180.0 * delta_time;
 		double cosA = cos(angle);
 		double sinA = sin(angle);
 
@@ -251,9 +288,9 @@ int	on_key_press(int keycode, void *param)
 		*planeX = oldPlaneX * cosA - *planeY * sinA;
 		*planeY = oldPlaneX * sinA + *planeY * cosA;
 	}
-	else if (keycode == KEY_LEFT)
+	if (is_key_pressed(pressed_keys, KEY_LEFT))
 	{
-		double angle = 10 * M_PI / 180.0;
+		double angle = 180 * M_PI / 180.0 * delta_time;
 		double cosA = cos(angle);
 		double sinA = sin(angle);
 
@@ -265,9 +302,25 @@ int	on_key_press(int keycode, void *param)
 		*planeX = oldPlaneX * cosA - *planeY * sinA;
 		*planeY = oldPlaneX * sinA + *planeY * cosA;
 	}
-	ft_render_map(scene);
-	mlx_put_image_to_window(scene->mlx.mlx, scene->mlx.win, scene->mlx.img, 0, 0);
 	return 1;
+}
+
+
+int	update(void *param)
+{
+	t_scene *const scene = param;
+	t_timestamp	const current = get_timestamp();
+
+	double	delta_time =  (current - scene->last_tick) / 1000.0;
+	if (delta_time > 0)
+	{
+		scene->last_tick = current;
+		move(scene, delta_time);
+		ft_render_map(scene);
+		mlx_put_image_to_window(scene->mlx.mlx, scene->mlx.win, scene->mlx.img, 0, 0);
+		printf("FPS: %d\n", (int)(1.0 / delta_time));
+	}
+	return (1);
 }
 
 int main(int size, char **args)
@@ -277,6 +330,7 @@ int main(int size, char **args)
 	scene->player.direction.y = 0;
 	scene->player.plane.x = 0;
 	scene->player.plane.y = .66;
+	scene->last_tick = get_timestamp();
 	if (size == 2)
 	{
 		if (!parser(args[1], scene))
@@ -285,7 +339,9 @@ int main(int size, char **args)
 		init_scene(&scene->mlx);
 		ft_render_map(scene);
 		mlx_put_image_to_window(scene->mlx.mlx, scene->mlx.win, scene->mlx.img, 0, 0);
-		mlx_key_hook(scene->mlx.win, on_key_press, scene);
+		mlx_hook(scene->mlx.win,  2, (1L<<0),on_key_press, &scene->pressed_keys);
+		mlx_hook(scene->mlx.win, 3, (1L<<1), on_key_release, &scene->pressed_keys);
+		mlx_loop_hook(scene->mlx.mlx, update, scene);
 		mlx_hook(scene->mlx.win, 17, 0, close_window, scene);
 		mlx_loop(scene->mlx.mlx);
 	}	
