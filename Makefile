@@ -22,7 +22,7 @@ UTILS = $(UTILS_PARSER) $(UTILS_PATH)/strings.c
 SOURCES = main.c $(UTILS) $(HELPERS)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror #-g -fsanitize=address
 
 RM = rm -rf
 

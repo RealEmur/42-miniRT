@@ -6,7 +6,7 @@
 /*   By: tugcekul <tugcekul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 15:17:58 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/08 20:28:39 by tugcekul         ###   ########.fr       */
+/*   Updated: 2025/02/13 12:52:17 by tugcekul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,12 @@ int	parse_color(t_scene *scene, char **props, int type, int line)
 	return (true);
 }
 
+void	print_map(char **map)
+{
+	for (int i = 0; map[i]; i++)
+		printf("%s\n", map[i]);
+}
+
 int parse_map(t_scene *scene, int fd, char *line, int *line_count)
 {
 	t_map	*const map = &scene->map;
@@ -80,6 +86,9 @@ int parse_map(t_scene *scene, int fd, char *line, int *line_count)
 	map->width = get_map_width(map_layout);
 	scene->mlx.win_width = map->width * TILE_SIZE;
 	scene->mlx.wid_height = map->height * TILE_SIZE;
+	//find_player_position(scene); buraya gelecek
+	//flood fill eklenecek
+	//a.cub seg hatası düzelecek
 	extend_map(map_layout, map->width);
 	map->layout = map_layout;
 	line = get_next_line(fd);

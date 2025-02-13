@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: tugcekul <tugcekul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 03:09:45 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/08 01:32:46 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/13 02:59:24 by tugcekul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,17 @@ int	validate_map(char **map)
 		{
 			if (!ft_strchr(MAP_LAYOUT_CHARS, map[i][j]))
 				return (panic("Map Error", ERR_MAP_INVALIDCHAR, false));
+			if (map[i][j] == '$')
+			{
+				if (j != 0 && map[i][j - 1] != '1' && map[i][j - 1] != '$')
+					return (panic("Map Error", ERR_MAP_LAYOUT_LEFT, false));
+				if (j != (int)ft_strlen(map[i]) - 1 && map[i][j + 1] != '1' && map[i][j + 1] != '$')
+					return (panic("Map Error", ERR_MAP_LAYOUT_RIGHT, false));
+				if (i != 0 && map[i - 1][j] != '1' && map[i - 1][j] != '$')
+					return (panic("Map Error", ERR_MAP_LAYOUT_TOP, false));
+				if (i != str_arr_size(map) - 1 && map[i + 1][j] != '1' && map[i + 1][j] != '$')
+					return (panic("Map Error", ERR_MAP_LAYOUT_BOTTOM, false));
+			}
 			chars[(int)map[i][j]]++;
 		}
 	}
@@ -76,9 +87,14 @@ int		extend_map(char **map, int width)
 			return (panic("Malloc", NULL, false));
 		j = -1;
 		while (map[i][++j])
-			temp[j] = map[i][j];
+		{
+			if (map[i][j] == ' ')
+				temp[j] = '$';
+			else 
+				temp[j] = map[i][j];
+		}
 		while (j < width)
-			temp[j++] = ' ';
+			temp[j++] = '$';
 		free(map[i]);
 		map[i] = temp;
 	}
@@ -98,7 +114,7 @@ char    **load_map(int fd, char *firstline, int *line_count)
 	{
 		line = get_next_line(fd);
 		(*line_count)++;
-		if (!line || *line == '\n')
+		if (!line || *line == '\n' || ft_strtrim(line, " \t\n")[0] == '\0')
 		{
 			free(line);
 			break ;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: tugcekul <tugcekul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:16:39 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/12 16:36:33 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/13 12:56:08 by tugcekul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,6 @@ void	clean_all(t_scene *scene)
 	while (++i < COLOR_COUNT)
 		free(scene->options.colors[i]);
 }
-
-// void	print_map(t_map *map)
-// {
-// 	for (int i = 0; i < map->height; i++)
-// 	{
-// 		printf("%s\n", map->layout[i]);	
-// 	}
-// }
 
 int	close_window(t_scene *scene)
 {
@@ -276,7 +268,7 @@ int main(int size, char **args)
 	{
 		if (!parser(args[1], scene))
 			return (clean_all(scene), EXIT_FAILURE);
-		find_player_position(scene);
+		find_player_position(scene);//yeri değişecek parser da kontrol için bu değerler gerekli
 		init_scene(&scene->mlx);
 		ft_render_map(scene);
 		mlx_put_image_to_window(scene->mlx.mlx, scene->mlx.win, scene->mlx.img, 0, 0);

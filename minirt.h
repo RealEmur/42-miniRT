@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: tugcekul <tugcekul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:17:01 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/09 12:45:25 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/13 12:49:10 by tugcekul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 #include "lib/mlx/mlx.h"
 
 #define MAP_FILE_EXTENSION ".cub"
-#define MAP_LAYOUT_CHARS " 01WNSE"
+#define MAP_LAYOUT_CHARS "$01WNSE"
 
 #define ERR_USAGE "./cub3D <a map file>"
 #define ERR_EXTENSION "Map description files must have '.cub' extension"
@@ -49,6 +49,11 @@
 #define ERR_COLOR_MISSING "There are missing colors in map file"
 #define ERR_MAP_INVALIDCHAR "Invalid char usage in map"
 #define ERR_MAP_PLAYER "There must be 1 player character in map"
+#define ERR_MAP_LAYOUT_LEFT "Map layout is invalid for left side"
+#define ERR_MAP_LAYOUT_RIGHT "Map layout is invalid for right side"
+#define ERR_MAP_LAYOUT_TOP "Map layout is invalid for top side"
+#define ERR_MAP_LAYOUT_BOTTOM "Map layout is invalid for bottom side"
+#define ERR_INVALID_MAP "Map is not valid"
 
 #define TEXTURE_COUNT 4
 #define NORTH_TEXTURE 0
@@ -194,5 +199,6 @@ int	is_map_line(char *line);
 int	validate_map(char **map);
 int	rgbtouint(t_rgb rgb);
 void draw_pixel(t_mlx *mlx, int x, int y, unsigned int color);
+void find_player_position(t_scene *scene);
 
 #endif
