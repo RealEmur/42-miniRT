@@ -6,7 +6,7 @@
 /*   By: tugcekul <tugcekul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:16:39 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/13 16:44:18 by tugcekul         ###   ########.fr       */
+/*   Updated: 2025/02/13 22:04:14 by tugcekul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	clean_all(t_scene *scene)
 		free_str_arr(scene->map.layout);
 	i = -1;
 	while (++i < TEXTURE_COUNT)
-		free(scene->options.textures[i]);
+		free(scene->options.textures[i].path);
 	i = -1;
 	while (++i < COLOR_COUNT)
 		free(scene->options.colors[i]);
@@ -32,12 +32,21 @@ int	close_window(t_scene *scene)
 	exit(EXIT_SUCCESS);
 }
 
-void init_scene(t_mlx *mlx)
+void init_scene(t_mlx *mlx, t_scene *scene)
 {
+	int i;
+
+	i = -1;
 	mlx->mlx = mlx_init();
 	mlx->win = mlx_new_window(mlx->mlx, WIDTH, HEIGHT, "Cub3D");
 	mlx->img = mlx_new_image(mlx->mlx, WIDTH, HEIGHT);
 	mlx->addr = mlx_get_data_addr(mlx->img, &mlx->bits_per_pixel, &mlx->size_line, &(int){0});
+	while (++i < TEXTURE_COUNT)
+	{
+		scene->options.textures->img = mlx_xpm_file_to_image(mlx->mlx, scene->options.textures[i].path, &scene->options.textures[i].width, &scene->options.textures[i].height);
+		if (!scene->options.textures->img)
+			panic("Texture", "Couldn't load texture", EXIT_FAILURE);
+	}
 }
 
 void find_player_position(t_scene *scene)
@@ -54,6 +63,7 @@ void find_player_position(t_scene *scene)
 			if (ft_strchr(MAP_LAYOUT_CHARS, scene->map.layout[i][j]))
 			{
 				if (ft_strchr("NSWE", scene->map.layout[i][j]))
+					
 				{
 					scene->player.position.x = j + 0.5;
 					scene->player.position.y = i + 0.5;
@@ -126,6 +136,8 @@ void ft_render_map(t_scene *scene)
 				draw_pixel(&scene->mlx, x, y, rgbtouint(*scene->options.colors[FLOOR_COLOR]));
 		}	
 	}
+
+	
 
     for (int screenX = 0; screenX < WIDTH; screenX++)
     { 
@@ -282,7 +294,7 @@ int main(int size, char **args)
 		if (!parser(args[1], scene))
 			return (clean_all(scene), EXIT_FAILURE);
 		find_player_position(scene);//yeri değişecek parser da kontrol için bu değerler gerekli
-		init_scene(&scene->mlx);
+		init_scene(&scene->mlx, scene);
 		ft_render_map(scene);
 		mlx_put_image_to_window(scene->mlx.mlx, scene->mlx.win, scene->mlx.img, 0, 0);
 		mlx_key_hook(scene->mlx.win, on_key_press, scene);

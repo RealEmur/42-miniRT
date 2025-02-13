@@ -6,7 +6,7 @@
 /*   By: tugcekul <tugcekul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:17:01 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/13 16:32:04 by tugcekul         ###   ########.fr       */
+/*   Updated: 2025/02/13 21:50:42 by tugcekul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,9 +131,17 @@ typedef struct t_coords
 typedef t_coords t_position;
 typedef t_coords t_vector;
 
+typedef struct s_texture
+{
+	char	*path;
+	int		width;
+	int		height;
+	void   *img;
+	int		*addr;
+}	t_texture;
 typedef	struct	s_options
 {
-	char	*textures[TEXTURE_COUNT];
+	t_texture textures[TEXTURE_COUNT];
 	t_rgb	*colors[COLOR_COUNT];
 } t_options;
 

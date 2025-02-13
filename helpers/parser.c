@@ -6,7 +6,7 @@
 /*   By: tugcekul <tugcekul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:59:26 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/13 12:11:06 by tugcekul         ###   ########.fr       */
+/*   Updated: 2025/02/13 18:48:52 by tugcekul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	check_inputs(t_scene *scene)
 		return (panic("Map Required", ERR_MAP_REQUIRED, false));
 	i = -1;
 	while (++i < TEXTURE_COUNT)
-		if (!scene->options.textures[i])
+		if (!scene->options.textures[i].path)
 			return (panic("Textures", ERR_TEXTURE_MISSING, false));
 	i = -1;
 	while (++i < COLOR_COUNT)
