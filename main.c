@@ -6,7 +6,7 @@
 /*   By: tugcekul <tugcekul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:16:39 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/13 12:56:08 by tugcekul         ###   ########.fr       */
+/*   Updated: 2025/02/13 16:44:18 by tugcekul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,16 +212,34 @@ int	on_key_press(int keycode, void *param)
 	double *dirY = &(scene->player.direction.y);
 	double	*planeX = &(scene->player.plane.x);
 	double	*planeY = &(scene->player.plane.y);
+		
+	if (keycode == KEY_ESC)
+		close_window(scene);
 	if (keycode == KEY_W)
 	{
 
-		if(map[(int)(*posY + *dirY)][(int)*posX] == '0') *posY += *dirY;
-    	if(map[(int)(*posY)][(int)(*posX + *dirX)] == '0') *posX += *dirX;
+		if(map[(int)(*posY + *dirY)][(int)*posX] == '0') *posY += *dirY * .5;
+    	if(map[(int)(*posY)][(int)(*posX + *dirX)] == '0') *posX += *dirX * .5;
 		printf("sa\n");
 	}
-	else if (keycode == KEY_A) // SOLA DÖNÜŞ
+	else if (keycode == KEY_A)
 	{
-		double angle = 10 * M_PI / 180.0;  // 10 derece dönüş
+		if (map[(int)(*posY)][(int)(*posX - *dirY)] == '0') *posX -= *dirY * .5;
+		if (map[(int)(*posY + *dirX)][(int)(*posX)] == '0') *posY += *dirX * .5;
+	}
+	if (keycode == KEY_S)
+	{
+		if(map[(int)(*posY - *dirY)][(int)(*posX)] == '0') *posY -= *dirY * .5;
+    	if(map[(int)(*posY)][(int)(*posX - *dirX)] == '0') *posX -= *dirX * .5;
+	}
+	else if (keycode == KEY_D)
+	{
+		if(map[(int)(*posY)][(int)(*posX + *dirY)] == '0') *posX += *dirY * .5;
+		if(map[(int)(*posY - *dirX)][(int)(*posX)] == '0') *posY -= *dirX * .5;
+	}
+	if (keycode == KEY_RIGHT)
+	{
+		double angle = -10 * M_PI / 180.0;
 		double cosA = cos(angle);
 		double sinA = sin(angle);
 
@@ -233,14 +251,9 @@ int	on_key_press(int keycode, void *param)
 		*planeX = oldPlaneX * cosA - *planeY * sinA;
 		*planeY = oldPlaneX * sinA + *planeY * cosA;
 	}
-	if (keycode == KEY_S)
+	else if (keycode == KEY_LEFT)
 	{
-		if(map[(int)(*posY - *dirY)][(int)(*posX)] == '0') *posY -= *dirY;
-    	if(map[(int)(*posY)][(int)(*posX - *dirX)] == '0') *posX -= *dirX;
-	}
-	else if (keycode == KEY_D) // SAĞA DÖNÜŞ
-	{
-		double angle = -10 * M_PI / 180.0;  // -10 derece sağa dönüş
+		double angle = 10 * M_PI / 180.0;
 		double cosA = cos(angle);
 		double sinA = sin(angle);
 
