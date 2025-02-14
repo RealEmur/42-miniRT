@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:16:39 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/14 08:51:51 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/14 11:37:12 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -329,15 +329,10 @@ int main(int size, char **args)
 	{
 		if (!parser(args[1], scene))
 			return (clean_all(scene), EXIT_FAILURE);
+		scene->player.direction.x = -1;
+		scene->player.plane.y = 0.66;
 		init_display(scene);
-		
 		clean_all(scene);
-		/* init_scene(&scene->mlx, scene);
-		mlx_hook(scene->mlx.win,  2, (1L<<0),on_key_press, &scene->pressed_keys);
-		mlx_hook(scene->mlx.win, 3, (1L<<1), on_key_release, &scene->pressed_keys);
-		mlx_loop_hook(scene->mlx.mlx, update, scene);
-		mlx_hook(scene->mlx.win, 17, 0, close_window, scene);
-		mlx_loop(scene->mlx.mlx); */
 	}	
 	else
 		return (panic("Usage", ERR_USAGE, EXIT_FAILURE));

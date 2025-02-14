@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 07:40:44 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/14 08:54:53 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/14 09:23:00 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,6 @@ int	init_textures(void *mlx, t_texture *textures)
 int	update(void *param)
 {
 	t_scene *const scene = param;
-	t_mlx	*const	mlx = &scene->mlx;
-	t_image	*const image	= &mlx->image;
 	t_timestamp	const current = get_timestamp();
 
 	double	delta_time =  (current - scene->last_tick) / 1000.0;
@@ -63,7 +61,6 @@ int	update(void *param)
 		scene->last_tick = current;
 		//move(scene, delta_time);
 		render(scene);
-		mlx_put_image_to_window(mlx->mlx, mlx->win, image->img, 0, 0);
 	}
 	return (1);
 }

@@ -61,8 +61,8 @@
 #define CEILING_COLOR 0
 #define FLOOR_COLOR 1
 
-#define WIDTH 900
-#define HEIGHT 900
+#define WIDTH 1280
+#define HEIGHT 720
 
 #define KEY_W 119
 #define KEY_A 97
@@ -73,6 +73,8 @@
 #define KEY_LEFT 65361
 #define KEY_RIGHT 65363
 #define KEY_ESC 65307
+
+#define WALL_CHAR '1'
 
 #define PLAYER_RADIUS 0.2
 
@@ -161,6 +163,21 @@ typedef struct s_mlx
 	t_image	image;
 }	t_mlx;
 
+typedef struct s_ray
+{
+	int			step_x;
+	int			step_y;
+	int			draw_start;
+	int			draw_end;
+	int			height;
+	int			current_x;
+	double		deltadistx;
+	double		deltadisty;
+	double		sidedistx;
+	double		sidedisty;
+	t_vector	dir;
+} t_ray;
+
 typedef struct s_scene 
 {
 	t_map		map;
@@ -197,11 +214,13 @@ int		is_key_pressed(t_list *pressed_keys, int keycode);
 int		init_display(t_scene *scene);
 void 	free_str_arr(char **strs);
 void	parser_panic(int line, char *title, char *err);
-void	draw_pixel(t_mlx *mlx, int x, int y, unsigned int color);
 void	find_player_position(t_scene *scene);
-void	render();
+void	render(t_scene *scene);
+void 	draw_pixel(t_image	*image, int x, int y, unsigned int color);
+void	draw_background(t_image *image, t_rgb	**rgbs);
 char    **load_map(int fd, char *firstline, int *line_count);
 t_rgb	strtorgb(char *str);
 t_timestamp	get_timestamp(void);
+t_texture	*get_texture(t_texture *textures, int side, double ray_x, double ray_y);
 
 #endif
