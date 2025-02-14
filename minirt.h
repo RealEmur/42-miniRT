@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:17:01 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/13 23:50:19 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/14 00:25:49 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,9 @@ typedef struct s_texture
 	int		width;
 	int		height;
 	void   *img;
-	int		*addr;
+	int		size_line;
+	int		bits_per_pixel;
+	char	*addr;
 }	t_texture;
 typedef	struct	s_options
 {

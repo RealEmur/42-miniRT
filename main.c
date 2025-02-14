@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:16:39 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/13 23:50:24 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/14 04:39:47 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	close_window(t_scene *scene)
 void init_scene(t_mlx *mlx, t_scene *scene)
 {
 	int i;
-
+	int	trash;
 	i = -1;
 	mlx->mlx = mlx_init();
 	mlx->win = mlx_new_window(mlx->mlx, WIDTH, HEIGHT, "Cub3D");
@@ -43,8 +43,9 @@ void init_scene(t_mlx *mlx, t_scene *scene)
 	mlx->addr = mlx_get_data_addr(mlx->img, &mlx->bits_per_pixel, &mlx->size_line, &(int){0});
 	while (++i < TEXTURE_COUNT)
 	{
-		scene->options.textures->img = mlx_xpm_file_to_image(mlx->mlx, scene->options.textures[i].path, &scene->options.textures[i].width, &scene->options.textures[i].height);
-		if (!scene->options.textures->img)
+		scene->options.textures[i].img = mlx_xpm_file_to_image(mlx->mlx, scene->options.textures[i].path, &scene->options.textures[i].width, &scene->options.textures[i].height);
+		scene->options.textures[i].addr = mlx_get_data_addr(scene->options.textures[i].img, &scene->options.textures[i].bits_per_pixel, &scene->options.textures[i].size_line, &trash);
+		if (!scene->options.textures[i].img || !scene->options.textures[i].addr)
 			panic("Texture", "Couldn't load texture", EXIT_FAILURE);
 	}
 }
@@ -79,40 +80,24 @@ void find_player_position(t_scene *scene)
 	}
 }
 
-void draw_line(t_mlx *mlx, int x0, int y0, int x1, int y1, unsigned int color)
-{
-    int dx = abs(x1 - x0);
-    int dy = abs(y1 - y0);
-    int sx = (x0 < x1) ? 1 : -1;
-    int sy = (y0 < y1) ? 1 : -1;
-    int err = dx - dy;
-    int e2;
-
-    while (1)
-    {
-        draw_pixel(mlx, x0, y0, color);
-        if (x0 == x1 && y0 == y1)
-            break;
-        e2 = 2 * err;
-        if (e2 > -dy)
-        {
-            err -= dy;
-            x0 += sx;
-        }
-        if (e2 < dx)
-        {
-            err += dx;
-            y0 += sy;
-        }
-    }
-}
-
 void draw_pixel(t_mlx *mlx, int x, int y, unsigned int color)
 {
 	unsigned int	*addr = (unsigned int *)mlx->addr;
 	const int		pos = (y * mlx->size_line + x * (mlx->bits_per_pixel / 8)) / 4;
 	
 	addr[pos]= color;
+}
+
+t_texture	*get_texture(t_texture *textures, int side, double ray_x, double ray_y)
+{
+	if (side == 0 && ray_x > 0)
+		return (&textures[0]);
+	else if (side == 0 && ray_x < 0)
+		return (&textures[1]);
+	else if (side == 1 && ray_y > 0)
+		return (&textures[2]);
+	else
+		return (&textures[3]);
 }
 
 void ft_render_map(t_scene *scene)
@@ -204,15 +189,37 @@ void ft_render_map(t_scene *scene)
 				int drawEnd = lineHeight / 2 + HEIGHT / 2;
 				if (drawEnd >= HEIGHT)
 					drawEnd = HEIGHT - 1;
-				if (side == 1)
-					draw_line(&scene->mlx, screenX, drawStart, screenX, drawEnd, 0xFFFF00);
-				else 
-					draw_line(&scene->mlx, screenX, drawStart, screenX, drawEnd, 0xFFDD00);
+
+				double wallX; 
+				if (side == 0)
+					wallX = player->position.y + perpWallDist * rayDirY;
+				else
+					wallX = player->position.x + perpWallDist * rayDirX;
+				wallX -= floor((wallX));
+				
+				t_texture *texture = get_texture(scene->options.textures, side, rayDirX, rayDirY);
+				int texX = (int)(wallX * (double)(texture->width));
+				if (side == 0 && rayDirX > 0) 
+					texX = texture->width - texX - 1;
+				if (side == 1 && rayDirY < 0) 
+					texX = texture->width - texX - 1;
+
+				double step = (double)texture->height / lineHeight;
+				double texPos = (drawStart - (HEIGHT / 2) + (lineHeight / 2)) * step;
+				for (int y = drawStart; y < drawEnd; y++)
+				{
+					int texY = (int)texPos & (texture->height - 1);
+					texPos += step;
+					unsigned int index = y * WIDTH + screenX;
+					((unsigned int *)scene->mlx.addr)[index] = ((unsigned int *)texture->addr)[texture->width * texY + texX];
+				}
+
 				break;
 			}
         }
 	}
 }
+
 
 int	move(void *param, double delta_time)
 {
@@ -330,7 +337,7 @@ int	update(void *param)
 		move(scene, delta_time);
 		ft_render_map(scene);
 		mlx_put_image_to_window(scene->mlx.mlx, scene->mlx.win, scene->mlx.img, 0, 0);
-		printf("FPS: %d\n", (int)(1.0 / delta_time));
+		//printf("FPS: %d\n", (int)(1.0 / delta_time));
 	}
 	return (1);
 }
