@@ -6,11 +6,11 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 14:30:28 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/07 03:25:57 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/14 05:26:31 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minirt.h"
+#include "../cub3d.h"
 
 int	str_append(char **s1, char *s2)
 {

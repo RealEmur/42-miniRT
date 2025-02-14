@@ -6,11 +6,11 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 18:22:14 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/13 23:36:35 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/14 05:26:51 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minirt.h"
+#include "../cub3d.h"
 
 void	destroy_key_node(t_list	*node)
 {

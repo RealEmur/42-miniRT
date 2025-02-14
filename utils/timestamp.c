@@ -6,11 +6,11 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 20:05:31 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/13 20:05:38 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/14 05:26:34 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minirt.h"
+#include "../cub3d.h"
 
 t_timestamp	get_timestamp(void)
 {

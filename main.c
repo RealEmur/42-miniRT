@@ -6,27 +6,36 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:16:39 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/14 04:39:47 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/14 08:51:51 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "cub3d.h"
 
 void	clean_all(t_scene *scene)
 {
+	t_mlx *const 		mlx = &scene->mlx;
+	t_rgb **const		colors = scene->options.colors;
+	t_texture *const	textures = scene->options.textures;
 	int		i;
 
 	if (scene->map.layout)
 		free_str_arr(scene->map.layout);
 	i = -1;
 	while (++i < TEXTURE_COUNT)
-		free(scene->options.textures[i].path);
+	{
+		free(textures[i].path);
+		if (mlx->mlx && textures[i].image.img)
+			mlx_destroy_image(mlx->mlx, textures[i].image.img);
+	}
 	i = -1;
 	while (++i < COLOR_COUNT)
-		free(scene->options.colors[i]);
+		free(colors[i]);
+	if (mlx->win)
+		mlx_destroy_window(mlx->mlx, mlx->win);
 }
 
-int	close_window(t_scene *scene)
+/* int	close_window(t_scene *scene)
 {
 	clean_all(scene);
 	exit(EXIT_SUCCESS);
@@ -47,36 +56,6 @@ void init_scene(t_mlx *mlx, t_scene *scene)
 		scene->options.textures[i].addr = mlx_get_data_addr(scene->options.textures[i].img, &scene->options.textures[i].bits_per_pixel, &scene->options.textures[i].size_line, &trash);
 		if (!scene->options.textures[i].img || !scene->options.textures[i].addr)
 			panic("Texture", "Couldn't load texture", EXIT_FAILURE);
-	}
-}
-
-void find_player_position(t_scene *scene)
-{
-	int		i;
-	int		j;
-
-	i = -1;
-	while (++i < scene->map.height)
-	{
-		j = -1;
-		while (++j < scene->map.width)
-		{
-			if (ft_strchr(MAP_LAYOUT_CHARS, scene->map.layout[i][j]))
-			{
-				if (ft_strchr("NSWE", scene->map.layout[i][j]))
-					
-				{
-					scene->player.position.x = j + 0.5;
-					scene->player.position.y = i + 0.5;
-					scene->player.position.z = 0;
-					scene->map.layout[i][j] = '0';
-					if (scene->player.position.z)
-						parser_panic(1, i, "Player", "Player position must be on the ground");
-				}
-			}
-			else
-				parser_panic(1, i, "Map", "Invalid char in map layout");
-		}
 	}
 }
 
@@ -341,28 +320,24 @@ int	update(void *param)
 	}
 	return (1);
 }
-
+ */
 int main(int size, char **args)
 {
 	t_scene	*const scene = &(t_scene){0};
-	scene->player.direction.x = -1;
-	scene->player.direction.y = 0;
-	scene->player.plane.x = 0;
-	scene->player.plane.y = .66;
-	scene->last_tick = get_timestamp();
+	
 	if (size == 2)
 	{
 		if (!parser(args[1], scene))
 			return (clean_all(scene), EXIT_FAILURE);
-		find_player_position(scene);//yeri değişecek parser da kontrol için bu değerler gerekli
-		init_scene(&scene->mlx, scene);
-		ft_render_map(scene);
-		mlx_put_image_to_window(scene->mlx.mlx, scene->mlx.win, scene->mlx.img, 0, 0);
+		init_display(scene);
+		
+		clean_all(scene);
+		/* init_scene(&scene->mlx, scene);
 		mlx_hook(scene->mlx.win,  2, (1L<<0),on_key_press, &scene->pressed_keys);
 		mlx_hook(scene->mlx.win, 3, (1L<<1), on_key_release, &scene->pressed_keys);
 		mlx_loop_hook(scene->mlx.mlx, update, scene);
 		mlx_hook(scene->mlx.win, 17, 0, close_window, scene);
-		mlx_loop(scene->mlx.mlx);
+		mlx_loop(scene->mlx.mlx); */
 	}	
 	else
 		return (panic("Usage", ERR_USAGE, EXIT_FAILURE));

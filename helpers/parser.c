@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tugcekul <tugcekul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:59:26 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/13 18:48:52 by tugcekul         ###   ########.fr       */
+/*   Updated: 2025/02/14 06:21:53 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minirt.h"
+#include "../cub3d.h"
 
 int	check_inputs(t_scene *scene)
 {
@@ -32,7 +32,7 @@ int	check_inputs(t_scene *scene)
 int	get_line_type(char *line, char **props)
 {
 	char	*identifier;
-	
+
 	if (!*line)
 		return (MAPKEY_NOTHING);
 	else if (str_arr_size(props) > 0)
@@ -57,8 +57,8 @@ int	get_line_type(char *line, char **props)
 }
 
 int	parse_element(t_scene *scene, char **props, int type, int line_count)
-{	
-	if (type == TEXTURE_EAST 
+{
+	if (type == TEXTURE_EAST
 		|| type == TEXTURE_NORTH
 		|| type == TEXTURE_SOUTH
 		|| type == TEXTURE_WEST)
@@ -75,26 +75,26 @@ int	parse_elements(int fd, t_scene *scene)
 	char		*line;
 	char		*trimmed;
 	char		**splitted;
-	
+
 	line_count = 1;
 	while (1)
 	{
 		line = get_next_line(fd);
 		if (!line)
-			break;
+			break ;
 		trimmed = ft_strtrim(line, "\n");
 		if (!trimmed)
 			return (free(line), panic("Trim Failed", NULL, false));
 		splitted = ft_split(trimmed, ' ');
 		if (!splitted)
-			return (free(line), free(trimmed), panic("Split Failed", NULL, false));
+			return (free(line), free(trimmed), panic("Split", NULL, false));
 		type = get_line_type(trimmed, splitted);
 		if (type == MAPKEY_INVALID)
-			return (free(line), free(trimmed), free_str_arr(splitted), parser_panic(ERROR, line_count, "Unrecognized Identifier", ERR_INVALID_INDETIFIER), false);
-		else if (type != MAPKEY_NOTHING 
-			&& ((type < MAP_LAYOUT && !parse_element(scene, splitted, type, line_count))
-			|| (type == MAP_LAYOUT && !parse_map(scene, fd, trimmed, &line_count))))
-			return (free(line), free(trimmed), false);
+			return (free(line), free(trimmed), free_str_arr(splitted), parser_panic(line_count, "Identifier", ERR_INVALID_IDENTIFIER), false);
+		else if (type != MAPKEY_NOTHING
+				&& ((type < MAP_LAYOUT && !parse_element(scene, splitted, type, line_count))
+				|| (type == MAP_LAYOUT && !parse_map(scene, fd, trimmed, &line_count))))
+			return (free(line), free(trimmed), free_str_arr(splitted), false);
 		line_count++;
 		free_str_arr(splitted);
 		free(trimmed);
@@ -106,14 +106,15 @@ int	parse_elements(int fd, t_scene *scene)
 int	parser(char *path, t_scene *scene)
 {
 	int		fd;
-	
+
 	if (!validate_extension(path, MAP_FILE_EXTENSION))
 		return (panic(path, ERR_EXTENSION, false), false);
-    fd = open(path, O_RDONLY);
-    if (fd == -1)
+	fd = open(path, O_RDONLY);
+	if (fd == -1)
 		return (panic(path, NULL, false), false);
-	if (!parse_elements(fd, scene) 
+	if (!parse_elements(fd, scene)
 		|| !check_inputs(scene))
-		return (false);
-    return (true);   
+		return (close(fd), false);
+	close(fd);
+	return (true);
 }

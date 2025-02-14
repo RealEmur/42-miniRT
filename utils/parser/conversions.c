@@ -6,13 +6,13 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 15:25:05 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/09 10:43:51 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/14 05:40:17 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minirt.h"
+#include "../../cub3d.h"
 
-int		is_num(char *str)
+int	is_num(char *str)
 {
 	int		i;
 
@@ -26,13 +26,13 @@ int		is_num(char *str)
 	return (!str[i] && i > 0);
 }
 
-int		is_rgb(char *str)
+int	is_rgb(char *str)
 {
 	int			i;
 	int			is_rgb;
 	const int	size = ft_strlen(str);
 	char		**splitted;
-	
+
 	if (ft_strnstr(str, ",,", size)
 		|| (*str == ',' || str[size - 1] == ','))
 		return (false);
@@ -69,5 +69,5 @@ t_rgb	strtorgb(char *str)
 
 int	rgbtouint(t_rgb rgb)
 {
-	return rgb.red * 65536 + rgb.blue * 256 + rgb.green;
+	return (rgb.red * 65536 + rgb.blue * 256 + rgb.green);
 }

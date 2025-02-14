@@ -1,29 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   validator.c                                        :+:      :+:    :+:   */
+/*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/28 19:29:14 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/14 05:39:37 by emyildir         ###   ########.fr       */
+/*   Created: 2025/02/14 08:50:26 by emyildir          #+#    #+#             */
+/*   Updated: 2025/02/14 08:51:07 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
-int	validate_rgb(t_rgb rgb)
+void	render()
 {
-	if ((rgb.red < 0 || rgb.red > 255)
-		|| (rgb.green < 0 || rgb.green > 255)
-		|| (rgb.blue < 0 || rgb.blue > 255))
-		return (false);
-	return (true);
-}
-
-int	validate_extension(char *path, char *extension)
-{
-	const int	len = ft_strlen(path) - 4;
-
-	return (len >= 0 && !ft_strncmp(path + len, extension, 4));
+		
 }

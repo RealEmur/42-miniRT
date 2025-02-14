@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tugcekul <tugcekul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 03:09:45 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/13 02:59:24 by tugcekul         ###   ########.fr       */
+/*   Updated: 2025/02/14 06:23:31 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minirt.h"
+#include "../../cub3d.h"
 
 int	validate_map(char **map)
 {
@@ -27,17 +27,12 @@ int	validate_map(char **map)
 		{
 			if (!ft_strchr(MAP_LAYOUT_CHARS, map[i][j]))
 				return (panic("Map Error", ERR_MAP_INVALIDCHAR, false));
-			if (map[i][j] == '$')
-			{
-				if (j != 0 && map[i][j - 1] != '1' && map[i][j - 1] != '$')
-					return (panic("Map Error", ERR_MAP_LAYOUT_LEFT, false));
-				if (j != (int)ft_strlen(map[i]) - 1 && map[i][j + 1] != '1' && map[i][j + 1] != '$')
-					return (panic("Map Error", ERR_MAP_LAYOUT_RIGHT, false));
-				if (i != 0 && map[i - 1][j] != '1' && map[i - 1][j] != '$')
-					return (panic("Map Error", ERR_MAP_LAYOUT_TOP, false));
-				if (i != str_arr_size(map) - 1 && map[i + 1][j] != '1' && map[i + 1][j] != '$')
-					return (panic("Map Error", ERR_MAP_LAYOUT_BOTTOM, false));
-			}
+			if (map[i][j] == '$' && ((j != 0 && map[i][j - 1] != '1'
+				&& map[i][j - 1] != '$') || (j != (int)ft_strlen(map[i]) - 1
+				&& map[i][j + 1] != '1' && map[i][j + 1] != '$') || (i != 0
+				&& map[i - 1][j] != '1' && map[i - 1][j] != '$') || (map[i + 1]
+				&& map[i + 1][j] != '1' && map[i + 1][j] != '$')))
+				return (panic("Map Error", ERR_DOUBLE_MAP, false));
 			chars[(int)map[i][j]]++;
 		}
 	}
@@ -57,12 +52,12 @@ int	is_map_line(char *line)
 	return (true);
 }
 
-int		get_map_width(char **map)
+int	get_map_width(char **map)
 {
 	int		i;
 	int		len;
 	int		max_width;
-	
+
 	i = -1;
 	while (map[++i])
 	{
@@ -73,7 +68,7 @@ int		get_map_width(char **map)
 	return (max_width);
 }
 
-int		extend_map(char **map, int width)
+int	extend_map(char **map, int width)
 {
 	int		i;
 	int		j;
@@ -90,7 +85,7 @@ int		extend_map(char **map, int width)
 		{
 			if (map[i][j] == ' ')
 				temp[j] = '$';
-			else 
+			else
 				temp[j] = map[i][j];
 		}
 		while (j < width)
@@ -101,24 +96,32 @@ int		extend_map(char **map, int width)
 	return (true);
 }
 
-char    **load_map(int fd, char *firstline, int *line_count)
+char	**load_map(int fd, char *firstline, int *line_count)
 {
 	char		*line;
 	char		*buffer;
+	char		*trimmed;
 	char		**map;
-	
+
 	buffer = ft_strdup(firstline);
 	if (!buffer || !str_append(&buffer, "\n"))
 		return (NULL);
 	while (1)
 	{
 		line = get_next_line(fd);
+		if (!line)
+			break ;
 		(*line_count)++;
-		if (!line || *line == '\n' || ft_strtrim(line, " \t\n")[0] == '\0')
+		trimmed = ft_strtrim(line, " \n");
+		if (!trimmed)
+			return (free(line), free(buffer), panic("Trim", NULL, -1), NULL);
+		if (!*trimmed)
 		{
+			free(trimmed);
 			free(line);
 			break ;
 		}
+		free(trimmed);
 		if (!str_append(&buffer, line))
 			return (free(line), free(buffer), NULL);
 		free(line);
