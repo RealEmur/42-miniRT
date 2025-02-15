@@ -75,8 +75,11 @@
 #define KEY_ESC 65307
 
 #define WALL_CHAR '1'
+#define MOVEABLE_CHARS "0NSWE"
 
 #define PLAYER_RADIUS 0.2
+#define	MOVE_SPEED 3.0
+#define	ROTATION_SPEED 1
 
 typedef struct timeval	t_timeval;
 typedef struct s_coords t_coords;
@@ -212,15 +215,17 @@ int		on_key_press(int keycode, void *param);
 int		on_key_release(int keycode, void *param);
 int		is_key_pressed(t_list *pressed_keys, int keycode);
 int		init_display(t_scene *scene);
+void	player_movement(t_scene *scene, t_player *player, double delta_time);
 void 	free_str_arr(char **strs);
 void	parser_panic(int line, char *title, char *err);
 void	find_player_position(t_scene *scene);
 void	render(t_scene *scene);
 void 	draw_pixel(t_image	*image, int x, int y, unsigned int color);
 void	draw_background(t_image *image, t_rgb	**rgbs);
+void 	close_window(t_scene *scene);
+void	clean_all(t_scene *scene);
 char    **load_map(int fd, char *firstline, int *line_count);
 t_rgb	strtorgb(char *str);
 t_timestamp	get_timestamp(void);
 t_texture	*get_texture(t_texture *textures, int side, double ray_x, double ray_y);
-
 #endif

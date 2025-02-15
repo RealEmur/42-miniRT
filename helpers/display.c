@@ -6,11 +6,17 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 07:40:44 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/14 09:23:00 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/15 02:37:11 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
+
+void close_window(t_scene *scene)
+{
+	clean_all(scene);
+	exit(EXIT_SUCCESS);
+}
 
 int	init_mlx(t_mlx *mlx)
 {
@@ -59,7 +65,7 @@ int	update(void *param)
 	if (delta_time > 0)
 	{
 		scene->last_tick = current;
-		//move(scene, delta_time);
+		player_movement(scene, &scene->player, delta_time);
 		render(scene);
 	}
 	return (1);
