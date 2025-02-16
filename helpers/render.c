@@ -6,40 +6,43 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:50:26 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/15 02:19:45 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/16 16:54:41 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
-void paint_wall(t_scene *scene, t_ray *ray, double wall_x, int side)
+void	paint_wall(t_scene *scene, t_ray *ray, double wall_x, int side)
 {
-	t_texture *texture = get_texture(scene->options.textures, side, ray->dir.x, ray->dir.y);
-	int tex_x = (int)(wall_x * (double)(texture->width));
-	double step;
-	double texPos;
-	
-	// if (side == 0 && ray->dir.y < 0)
-    // 	tex_x = texture->width - tex_x - 1;
-	// if (side == 1 && ray->dir.x > 0)
-   	//  tex_x = texture->width - tex_x - 1;
+	t_texture	*texture;
+	int			tex_x;
+	int			draw_y;
+	double		step;
+	double		texpos;
 
+	texture = get_texture(scene->options.textures, \
+	side, ray->dir.x, ray->dir.y);
+	tex_x = (int)(wall_x * (double)(texture->width));
+	if ((side == 1 && ray->dir.y < 0)
+		|| (side == 0 && ray->dir.x > 0))
+		tex_x = texture->width - tex_x - 1;
 	step = (double)texture->height / ray->height ;
-	texPos = (ray->draw_start - (HEIGHT / 2) + (ray->height  / 2)) * step;
-	for (int y = ray->draw_start; y < ray->draw_end; y++)
+	texpos = (ray->draw_start - (HEIGHT / 2) + (ray->height / 2)) * step;
+	draw_y = ray->draw_start;
+	while (draw_y < ray->draw_end)
 	{
-		int tex_y = (int)texPos & (texture->height - 1);
-		texPos += step;
-		unsigned int index = y * WIDTH + ray->current_x;
-		((unsigned int *)scene->mlx.image.addr)[index] = ((unsigned int *)texture->image.addr)[texture->width * tex_y + tex_x];
+		texpos += step;
+		draw_pixel(&scene->mlx.image, ray->current_x, draw_y++, \
+		get_pixel_color(&texture->image, tex_x, \
+		(int)texpos & (texture->height - 1)));
 	}
 }
 
-int wall_hit(t_scene *scene, t_ray *ray, t_position *pos, int side)
+int	wall_hit(t_scene *scene, t_ray *ray, t_position *pos, int side)
 {
-	double wall_x;
-	double wall_dist;
-	
+	double	wall_x;
+	double	wall_dist;
+
 	if (side == 0)
 		wall_dist = (ray->sidedistx - ray->deltadistx);
 	else
@@ -56,21 +59,20 @@ int wall_hit(t_scene *scene, t_ray *ray, t_position *pos, int side)
 	else
 		wall_x = pos->x + wall_dist * ray->dir.x;
 	wall_x -= floor(wall_x);
-	paint_wall(scene,ray,wall_x,side);
+	paint_wall(scene, ray, wall_x, side);
 	return (1);
 }
 
-void send_ray(t_scene *scene, t_ray *ray, t_position *pos)
+void	send_ray(t_scene *scene, t_ray *ray, t_position *pos)
 {
-	int map_x;
-	int map_y;
-	int side_hit;
-	char **const layout = scene->map.layout;
-	
+	int				map_x;
+	int				map_y;
+	int				side_hit;
+	char **const	layout = scene->map.layout;
 
 	map_x = (int)pos->x;
 	map_y = (int)pos->y;
-	while (1)	
+	while (layout[map_y][map_x] != WALL_CHAR)
 	{
 		if (ray->sidedistx < ray->sidedisty)
 		{
@@ -84,69 +86,53 @@ void send_ray(t_scene *scene, t_ray *ray, t_position *pos)
 			map_y += ray->step_y;
 			side_hit = 1;
 		}
-		if (layout[map_y][map_x] == WALL_CHAR)
-		{
-			wall_hit(scene, ray, pos, side_hit);
-			break;
-		}
+	}
+	wall_hit(scene, ray, pos, side_hit);
+}
+
+void	init_ray(t_ray *ray, t_position *pos, t_vector *direction, \
+t_vector *plane)
+{
+	const double	camera_x = 2 * ray->current_x / (double)WIDTH - 1;
+
+	ray->dir.x = direction->x + plane->x * camera_x;
+	ray->dir.y = direction->y + plane->y * camera_x;
+	ray->deltadistx = 1e30;
+	if (ray->dir.x != 0)
+		ray->deltadistx = fabs(1 / ray->dir.x);
+	ray->deltadisty = 1e30;
+	if (ray->dir.y != 0)
+		ray->deltadisty = fabs(1 / ray->dir.y);
+	ray->step_x = 1;
+	ray->sidedistx = ((int)pos->x + 1.0 - pos->x) * ray->deltadistx;
+	if (ray->dir.x < 0)
+	{
+		ray->step_x = -1;
+		ray->sidedistx = (pos->x - (int)pos->x) * ray->deltadistx;
+	}
+	ray->step_y = 1;
+	ray->sidedisty = ((int)pos->y + 1.0 - pos->y) * ray->deltadisty;
+	if (ray->dir.y < 0)
+	{
+		ray->step_y = -1;
+		ray->sidedisty = (pos->y - (int)pos->y) * ray->deltadisty;
 	}
 }
 
-void calc_ray_distances(t_ray *ray, t_position *pos)
+void	render(t_scene *scene)
 {
-    ray->deltadistx = 1e30;
-    if (ray->dir.x != 0)
-        ray->deltadistx = fabs(1 / ray->dir.x);
-    ray->deltadisty = 1e30;
-    if (ray->dir.y != 0)
-        ray->deltadisty = fabs(1 / ray->dir.y);
-    if (ray->dir.x < 0)
-    {
-        ray->step_x = -1;
-        ray->sidedistx = (pos->x - (int)pos->x) * ray->deltadistx;
-    }
-    else
-    {
-        ray->step_x = 1;
-        ray->sidedistx = ((int)pos->x + 1.0 - pos->x) * ray->deltadistx;
-    }
-    if (ray->dir.y < 0)
-    {
-        ray->step_y = -1;
-        ray->sidedisty = (pos->y - (int)pos->y) * ray->deltadisty;
-    }
-    else
-    {
-        ray->step_y = 1;
-        ray->sidedisty = ((int)pos->y + 1.0 - pos->y) * ray->deltadisty;
-    }
-}
+	t_ray *const	ray = &(t_ray){0};
+	t_image *const	image = &scene->mlx.image;
+	t_player *const	player = &scene->player;
+	t_vector *const	direction = &player->direction;
+	t_vector *const	plane = &player->plane;
 
-void create_rays(t_scene *scene)
-{
-	double		camera_x;
-	t_ray		*const	ray = &(t_ray){0};
-	t_player	*const	player = &scene->player;
-	t_vector	*const	direction = &player->direction;
-	t_vector	*const	plane = &player->plane;
-	
-
+	draw_background(image, scene->options.colors);
 	ray->current_x = -1;
 	while (++ray->current_x < WIDTH)
 	{
-		camera_x = 2 * ray->current_x / (double)WIDTH - 1;
-		ray->dir.x = direction->x + plane->x * camera_x;
-		ray->dir.y = direction->y + plane->y * camera_x;
-		calc_ray_distances(ray, &player->position);
+		init_ray(ray, &player->position, direction, plane);
 		send_ray(scene, ray, &player->position);
 	}
-}
-
-void render(t_scene *scene)
-{
-	t_image *const image = &scene->mlx.image;
-
-	draw_background(image, scene->options.colors);
-	create_rays(scene);
 	mlx_put_image_to_window(scene->mlx.mlx, scene->mlx.win, image->img, 0, 0);
 }

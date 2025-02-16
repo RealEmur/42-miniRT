@@ -11,7 +11,7 @@ MLX = $(MLX_PATH)/libmlx.a
 MLX_FLAGS = -L$(MLX_PATH) -L/usr/lib/x86_64-linux-gnu/ -lmlx -lXext -lX11 -lm -lz -I/usr/include/X11
 
 HELPERS_PATH = ./helpers
-HELPERS = $(HELPERS_PATH)/parser.c $(HELPERS_PATH)/validator.c $(HELPERS_PATH)/logger.c $(HELPERS_PATH)/keys.c $(HELPERS_PATH)/display.c $(HELPERS_PATH)/render.c $(HELPERS_PATH)/draw.c $(HELPERS_PATH)/movement.c
+HELPERS = $(HELPERS_PATH)/parser.c $(HELPERS_PATH)/validator.c $(HELPERS_PATH)/logger.c $(HELPERS_PATH)/keys.c $(HELPERS_PATH)/display.c $(HELPERS_PATH)/render.c $(HELPERS_PATH)/movement.c
 
 UTILS_PATH = ./utils
 
