@@ -77,7 +77,7 @@ int	extend_map(char **map, int width)
 	i = -1;
 	while (map[++i])
 	{
-		temp = ft_calloc(width + 1, sizeof(char));
+		temp = ft_calloc(width + 2, sizeof(char));
 		if (!temp)
 			return (panic("Malloc", NULL, false));
 		j = -1;
@@ -90,6 +90,7 @@ int	extend_map(char **map, int width)
 		}
 		while (j < width)
 			temp[j++] = '$';
+		temp[j++] = '$';
 		free(map[i]);
 		map[i] = temp;
 	}

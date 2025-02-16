@@ -94,15 +94,89 @@ int	parse_color(t_scene *scene, char **props, int type, int line)
 	return (true);
 }
 
+void 	print_map(char **map)
+{
+	int		i;
+
+	i = -1;
+	while (map[++i])
+		printf("%s\n", map[i]);
+}
+char **ft_strarrdup(char **arr)
+{
+    char **result;
+    int i = 0;
+    int len = 0;
+
+    if (!arr)
+        return (NULL);
+    while (arr[len])
+        len++;
+    result = (char **)malloc((len + 1) * sizeof(char *));
+    if (!result)
+        return (NULL);
+    while (i < len)
+    {
+        result[i] = ft_strdup(arr[i]);
+        if (!result[i])
+        {
+            while (--i >= 0)
+                free(result[i]);
+            free(result);
+            return (NULL);
+        }
+        i++;
+    }
+    result[len] = NULL;
+    return (result);
+}
+
+void flood_fill(char **map, int y, int x, t_map *map_struct)
+{
+	if (y < 0 || x < 0 || y >= map_struct->height || x >= (int)ft_strlen(map[y]))
+		return ;
+	if (map[y][x] == '2' || map[y][x] == ' ')
+		return ;
+	map[y][x] = '2';
+	flood_fill(map, y + 1, x, map_struct);
+	flood_fill(map, y - 1, x, map_struct);
+	flood_fill(map, y, x + 1, map_struct);
+	flood_fill(map, y, x - 1, map_struct);
+}
+
+int check_flood(char **map, t_map *map_struct)
+{
+	int i;
+	int j;
+
+	i = -1;
+	while (++i < map_struct->height)
+	{
+		j = -1;
+		while (++j < (int)ft_strlen(map[i]))
+		{
+			if (map[i][j] == '0' || map[i][j] == '1')
+				return(1);
+		}
+	}
+	return (0);
+}
+
 int	parse_map(t_scene *scene, int fd, char *line, int *line_count)
 {
 	t_map *const	map = &scene->map;
 	char **const	map_layout = load_map(fd, line, line_count);
+	char **const 	map_copy = ft_strarrdup(map_layout);
 
 	if (!map_layout)
 		return (panic("Reading Map", NULL, 0));
 	map->height = str_arr_size(map_layout);
 	map->width = get_map_width(map_layout);
+	set_player(&scene->player, map_layout);
+	flood_fill(map_copy, (int)scene->player.position.y, \
+		(int)scene->player.position.x, map);
+	if (check_flood(map_copy, map))
+		return (panic("Map", ERR_DOUBLE_MAP, 0));
 	extend_map(map_layout, map->width);
 	map->layout = map_layout;
 	line = get_next_line(fd);
@@ -111,6 +185,5 @@ int	parse_map(t_scene *scene, int fd, char *line, int *line_count)
 		ERR_MAP_NOTLAST), false);
 	if (!validate_map(map_layout))
 		return (false);
-	set_player(&scene->player, map_layout);
 	return (true);
 }

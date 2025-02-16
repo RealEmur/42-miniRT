@@ -19,10 +19,10 @@ void paint_wall(t_scene *scene, t_ray *ray, double wall_x, int side)
 	double step;
 	double texPos;
 	
-	// if (side == 0 && ray->dir.y < 0)
-    // 	tex_x = texture->width - tex_x - 1;
-	// if (side == 1 && ray->dir.x > 0)
-   	//  tex_x = texture->width - tex_x - 1;
+	// if (side == 0 && ray->dir.x > 0)
+	// 	tex_x = texture->width - tex_x - 1;
+	// if (side == 1 && ray->dir.x < 0)
+	// 	tex_x = texture->width - tex_x - 1;
 
 	step = (double)texture->height / ray->height ;
 	texPos = (ray->draw_start - (HEIGHT / 2) + (ray->height  / 2)) * step;
