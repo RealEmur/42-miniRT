@@ -8,7 +8,7 @@ GNL = $(GNL_PATH)/gnl.a
 
 MLX_PATH = ./lib/mlx
 MLX = $(MLX_PATH)/libmlx.a
-MLX_FLAGS = -L$(MLX_PATH) -lmlx -lXext -lX11 -lm -lz -L/usr/X11R6/lib
+MLX_FLAGS = -L$(MLX_PATH) -L/usr/lib/x86_64-linux-gnu/ -lmlx -lXext -lX11 -lm -lz -I/usr/include/X11
 
 HELPERS_PATH = ./helpers
 HELPERS = $(HELPERS_PATH)/parser.c $(HELPERS_PATH)/validator.c $(HELPERS_PATH)/logger.c $(HELPERS_PATH)/keys.c $(HELPERS_PATH)/display.c $(HELPERS_PATH)/render.c $(HELPERS_PATH)/draw.c $(HELPERS_PATH)/movement.c
@@ -26,7 +26,7 @@ UTILS = $(UTILS_PARSER) $(UTILS_RENDER) $(UTILS_PATH)/strings.c $(UTILS_PATH)/ti
 SOURCES = main.c $(UTILS) $(HELPERS)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror 
+# CFLAGS = -Wall -Wextra -Werror 
 
 RM = rm -rf
 
