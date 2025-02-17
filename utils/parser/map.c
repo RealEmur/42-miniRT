@@ -104,7 +104,10 @@ char	**load_map(int fd, char *firstline, int *line_count)
 	{
 		line = get_next_line(fd);
 		if (!line || *line == '\n')
+		{
+			free(line);
 			break ;
+		}
 		(*line_count)++;
 		if (!str_append(&buffer, line))
 			return (free(line), free(buffer), panic("Append", NULL, -1), NULL);
