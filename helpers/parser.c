@@ -76,20 +76,20 @@ int	parse_line(t_scene *scene, char *line, int line_count, int fd)
 
 	trimmed = ft_strtrim(line, "\n");
 	if (!trimmed)
-		return (free(line), panic("Trim Failed", NULL, false));
+		return (panic("Trim Failed", NULL, false));
 	splitted = ft_split(trimmed, ' ');
 	if (!splitted)
-		return (free(line), free(trimmed), panic("Split", NULL, false));
+		return (free(trimmed), panic("Split", NULL, false));
 	type = get_line_type(trimmed, splitted);
 	if (type == MAPKEY_INVALID)
-		return (free(line), free(trimmed), free_str_arr(splitted), \
+		return (free(trimmed), free_str_arr(splitted), \
 		parser_panic(line_count, "Identifier", ERR_INVALID_IDENTIFIER), false);
 	else if (type != MAPKEY_NOTHING
 		&& ((type < MAP_LAYOUT
 				&& !parse_element(scene, splitted, type, line_count))
 			|| (type == MAP_LAYOUT
 				&& !parse_map(scene, fd, trimmed, &line_count))))
-		return (free(line), free(trimmed), free_str_arr(splitted), false);
+		return (free(trimmed), free_str_arr(splitted), false);
 	line_count++;
 	free_str_arr(splitted);
 	free(trimmed);

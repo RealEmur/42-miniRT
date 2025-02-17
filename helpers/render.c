@@ -16,7 +16,7 @@ void	paint_wall(t_scene *scene, t_ray *ray, double wall_x, int side)
 {
 	t_texture	*texture;
 	int			tex_x;
-	int			draw_y;
+	double		draw_y;
 	double		step;
 	double		texpos;
 

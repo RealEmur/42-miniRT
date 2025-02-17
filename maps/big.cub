@@ -1,7 +1,7 @@
-NO ./textures/text1.xpm
-SO ./textures/text2.xpm
-WE ./textures/text3.xpm
-EA ./textures/text4.xpm
+SO ./textures/lake.xpm
+EA ./textures/hanim_abla.xpm
+NO ./textures/tree2.xpm
+WE ./textures/tree.xpm
 
 F 220,100,0
 C 225,30,0

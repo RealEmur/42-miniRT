@@ -3,7 +3,7 @@ SOURCES = get_next_line.c get_next_line_utils.c
 OBJS = $(SOURCES:.c=.o)
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 all: $(NAME)
 

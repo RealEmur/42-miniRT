@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: tkul <tkul@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:16:39 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/17 03:17:43 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/17 18:07:14 by tkul             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	clean_all(t_scene *scene)
 {
 	int					i;
 	t_mlx *const		mlx = &scene->mlx;
-	t_rgb **const		colors = scene->options.colors;
 	t_texture *const	textures = scene->options.textures;
 
 	if (scene->map.layout)
@@ -28,11 +27,17 @@ void	clean_all(t_scene *scene)
 		if (mlx->mlx && textures[i].image.img)
 			mlx_destroy_image(mlx->mlx, textures[i].image.img);
 	}
+	if (mlx->mlx && mlx->image.img)
+		mlx_destroy_image(mlx->mlx, mlx->image.img);
 	i = -1;
 	while (++i < COLOR_COUNT)
-		free(colors[i]);
+		free(scene->options.colors[i]);
 	if (mlx->win)
 		mlx_destroy_window(mlx->mlx, mlx->win);
+	if (mlx->mlx)
+		mlx_destroy_display(mlx->mlx);
+	free(mlx->mlx);
+	ft_lstclear(&scene->pressed_keys, free);
 }
 
 void	set_player_data(t_player *player)
@@ -40,22 +45,22 @@ void	set_player_data(t_player *player)
 	t_vector *const	plane = &player->plane;
 	t_vector *const	direction = &player->direction;
 
-	if (player->initial_direction == NORTH)
+	if (player->initial_direction == EAST)
 	{
 		direction->x = -1;
 		plane->y = 0.66;
 	}
-	else if (player->initial_direction == SOUTH)
+	else if (player->initial_direction == WEST)
 	{
 		direction->x = 1;
 		plane->y = -0.66;
 	}
-	else if (player->initial_direction == WEST)
+	else if (player->initial_direction == NORTH)
 	{
 		direction->y = -1;
 		plane->x = -0.66;
 	}
-	else if (player->initial_direction == EAST)
+	else if (player->initial_direction == SOUTH)
 	{
 		direction->y = 1;
 		plane->x = 0.66;

@@ -16,11 +16,11 @@ t_texture	*get_texture(t_texture *textures, int side, \
 double ray_x, double ray_y)
 {
 	if (side == 0 && ray_x > 0)
-		return (&textures[0]);
+		return (&textures[WEST]);
 	else if (side == 0 && ray_x < 0)
-		return (&textures[1]);
+		return (&textures[EAST]);
 	else if (side == 1 && ray_y > 0)
-		return (&textures[2]);
+		return (&textures[SOUTH]);
 	else
-		return (&textures[3]);
+		return (&textures[NORTH]);
 }

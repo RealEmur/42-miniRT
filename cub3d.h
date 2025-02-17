@@ -52,10 +52,6 @@
 # define MAP_LAYOUT_CHARS " $01WNSE"
 
 # define TEXTURE_COUNT 4
-# define NORTH_TEXTURE 0
-# define WEST_TEXTURE 3
-# define EAST_TEXTURE 1
-# define SOUTH_TEXTURE 2
 
 # define COLOR_COUNT 2
 # define CEILING_COLOR 0
@@ -102,8 +98,8 @@ typedef enum e_map_key
 	MAPKEY_INVALID,
 	TEXTURE_NORTH,
 	TEXTURE_WEST,
-	TEXTURE_EAST,
 	TEXTURE_SOUTH,
+	TEXTURE_EAST,
 	COLOR_CEILING,
 	COLOR_FLOOR,
 	MAP_LAYOUT
@@ -214,6 +210,8 @@ int				is_key_pressed(t_list *pressed_keys, int keycode);
 int				init_display(t_scene *scene);
 int				get_pixel_index(t_image	*image, int x, int y);
 int				check_walls(t_map *map, t_player *player);
+int				close_window(t_scene *scene);
+int				is_rgb_int_range(char *str);
 void			player_movement(t_scene *scene, t_player *player, \
 double delta_time);
 void			free_str_arr(char **strs);
@@ -221,7 +219,6 @@ void			parser_panic(int line, char *title, char *err);
 void			render(t_scene *scene);
 void			draw_pixel(t_image	*image, int x, int y, unsigned int color);
 void			draw_background(t_image *image, t_rgb	**rgbs);
-void			close_window(t_scene *scene);
 void			clean_all(t_scene *scene);
 char			**load_map(int fd, char *firstline, int *line_count);
 char			**ft_strarrdup(char **arr);

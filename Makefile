@@ -10,6 +10,8 @@ MLX_PATH = ./lib/mlx
 MLX = $(MLX_PATH)/libmlx.a
 MLX_FLAGS = -L$(MLX_PATH) -L/usr/lib/x86_64-linux-gnu/ -lmlx -lXext -lX11 -lm -lz -I/usr/include/X11
 
+HEADER_FILE = cub3d.h
+
 HELPERS_PATH = ./helpers
 HELPERS = $(HELPERS_PATH)/parser.c $(HELPERS_PATH)/validator.c $(HELPERS_PATH)/logger.c $(HELPERS_PATH)/keys.c $(HELPERS_PATH)/display.c $(HELPERS_PATH)/render.c $(HELPERS_PATH)/movement.c
 
@@ -26,13 +28,13 @@ UTILS = $(UTILS_PARSER) $(UTILS_RENDER) $(UTILS_PATH)/strings.c $(UTILS_PATH)/ti
 SOURCES = main.c $(UTILS) $(HELPERS)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror 
+CFLAGS = -Wall -Wextra -Werror -g
 
 RM = rm -rf
 
 all: $(NAME)
 
-$(NAME): $(LIBFT) $(GNL) $(MLX) $(SOURCES)
+$(NAME): $(LIBFT) $(GNL) $(MLX) $(SOURCES) $(HEADER_FILE)
 	$(CC) $(CFLAGS) $(MLX_FLAGS) -o $(NAME) $(SOURCES) $(LIBFT) $(GNL) $(MLX) $(MLX_FLAGS)
 
 $(LIBFT):
@@ -54,6 +56,7 @@ $(MLX):
 clean:
 	make fclean -C $(LIBFT_PATH)
 	make fclean -C $(GNL_PATH)
+	$(RM) $(MLX_PATH)
 
 fclean: clean
 	$(RM) $(NAME)

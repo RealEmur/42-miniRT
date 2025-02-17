@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   elements.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: tkul <tkul@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 15:17:58 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/17 03:39:00 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/17 18:13:48 by tkul             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ int	validate_props(char **props, char *types, int line)
 			return (parser_panic(line, props[i], ERR_ARG_XPM), false);
 		if (identifier == 'R' && !is_rgb(props[i]))
 			return (parser_panic(line, props[i], ERR_ARG_RGB), false);
-		if (identifier == 'R' && !validate_rgb(strtorgb(props[i])))
+		if (identifier == 'R' && (!is_rgb_int_range(props[i])
+				|| !validate_rgb(strtorgb(props[i]))))
 			return (parser_panic(line, props[i], ERR_RGB_RANGE), false);
 	}
 	return (1);
@@ -106,12 +107,18 @@ int	parse_map(t_scene *scene, int fd, char *line, int *line_count)
 	extend_map(map_layout, map->width);
 	set_player(&scene->player, map_layout);
 	map->layout = map_layout;
-	if (check_walls(map, &scene->player))
+	if (!check_walls(map, &scene->player))
 		return (panic("Map", ERR_DOUBLE_MAP, 0));
-	line = get_next_line(fd);
-	if (line)
-		return (free(line), parser_panic(++(*line_count), "Map File", \
-		ERR_MAP_NOTLAST), false);
+	while (1)
+	{
+		line = get_next_line(fd);
+		if (!line)
+			break ;
+		if (ft_strncmp(line, "\n", 2))
+			return (free(line), parser_panic(++(*line_count), "Map File", \
+			ERR_MAP_NOTLAST), false);
+		free(line);
+	}
 	if (!validate_map(map_layout))
 		return (false);
 	return (true);

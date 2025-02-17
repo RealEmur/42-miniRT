@@ -1,11 +1,9 @@
-NO ./path_to_the_north_texture.xpm
-SO ./path_to_the_south_texture.xpm
-WE ./path_to_the_west_texture.xpm
-EA ./path_to_the_east_texture.xpm
+SO ./textures/lake.xpm
+EA ./textures/hanim_abla.xpm
+NO ./textures/tree2.xpm
+WE ./textures/tree.xpm
 
 F 220,100,0
-C 225,30,0
-C 225,30,0
 C 225,30,0
 
         1111111111111111111111111
@@ -19,6 +17,6 @@ C 225,30,0
 11000000110101011100000010001
 10000000000000001100000010001
 10000000000000001101010010001
-11000001110101011111011110N0111
+1100000111010101111100000N0111
 11110111 1110101 101111010001
 11111111 1111111 111111111111

@@ -3,14 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   conversions.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: tkul <tkul@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 15:25:05 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/14 05:40:17 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/17 18:05:41 by tkul             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cub3d.h"
+
+int	is_rgb_int_range(char *str)
+{
+	int		diff;
+	char	*temp;
+	char	*comma;
+
+	while (str)
+	{
+		temp = ft_itoa(ft_atoi(str));
+		if (!temp)
+			return (false);
+		comma = ft_strchr(str, ',');
+		if (comma)
+			diff = ft_strncmp(temp, str, comma - str);
+		else
+			diff = ft_strncmp(temp, str, ft_strlen(str));
+		free(temp);
+		if (diff)
+			return (false);
+		if (!comma)
+			break ;
+		str = comma + 1;
+	}	
+	return (true);
+}
 
 int	is_num(char *str)
 {
@@ -69,5 +95,5 @@ t_rgb	strtorgb(char *str)
 
 int	rgbtouint(t_rgb rgb)
 {
-	return (rgb.red * 65536 + rgb.blue * 256 + rgb.green);
+	return (rgb.red * 65536 + rgb.green * 256 + rgb.blue);
 }

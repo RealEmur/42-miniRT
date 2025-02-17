@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tkul <tkul@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/17 18:04:22 by tkul              #+#    #+#             */
+/*   Updated: 2025/02/17 18:04:23 by tkul             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 int	set_initial_fdata(char **data)
@@ -44,6 +56,7 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || (!file_data[fd] && !set_initial_fdata(&file_data[fd])))
 		return (0);
+	bytes_read = 0;
 	while (file_data[fd] && !strchr(file_data[fd], '\n'))
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);

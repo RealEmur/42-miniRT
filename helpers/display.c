@@ -12,10 +12,11 @@
 
 #include "../cub3d.h"
 
-void	close_window(t_scene *scene)
+int	close_window(t_scene *scene)
 {
 	clean_all(scene);
 	exit(EXIT_SUCCESS);
+	return (true);
 }
 
 int	init_mlx(t_mlx *mlx)
@@ -81,6 +82,7 @@ int	init_display(t_scene *scene)
 		return (false);
 	mlx_hook(mlx->win, 2, (1L << 0), on_key_press, &scene->pressed_keys);
 	mlx_hook(mlx->win, 3, (1L << 1), on_key_release, &scene->pressed_keys);
+	mlx_hook(mlx->win, 17, 0, close_window, scene);
 	mlx_loop_hook(mlx->mlx, update, scene);
 	mlx_loop(mlx->mlx);
 	return (true);
