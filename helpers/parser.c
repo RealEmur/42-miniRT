@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: tkul <tkul@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:59:26 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/17 04:53:15 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/17 19:31:05 by tkul             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,11 +114,10 @@ int	parser(char *path, t_scene *scene)
 		if (!line)
 			break ;
 		if (!parse_line(scene, line, line_count++, fd))
-			return (close(fd), free(line), false);
+			return (clean_fd(fd), close(fd), free(line), false);
 		free(line);
 	}
 	if (!check_inputs(scene))
-		return (close(fd), false);
-	close(fd);
-	return (true);
+		return (clean_fd(fd), close(fd), false);
+	return (clean_fd(fd), close(fd), true);
 }

@@ -6,7 +6,7 @@
 /*   By: tkul <tkul@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 03:09:45 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/17 18:13:25 by tkul             ###   ########.fr       */
+/*   Updated: 2025/02/17 18:55:03 by tkul             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,6 @@ int	validate_map(char **map)
 		{
 			if (!ft_strchr(MAP_LAYOUT_CHARS, map[i][j]))
 				return (panic("Map Error", ERR_MAP_INVALIDCHAR, false));
-			if (map[i][j] == '$' && ((j != 0 && map[i][j - 1] != '1'
-				&& map[i][j - 1] != '$') || (j != (int)ft_strlen(map[i]) - 1
-				&& map[i][j + 1] != '1' && map[i][j + 1] != '$') || (i != 0
-				&& map[i - 1][j] != '1' && map[i - 1][j] != '$') || (map[i + 1]
-				&& map[i + 1][j] != '1' && map[i + 1][j] != '$')))
-				return (panic("Map Error", ERR_DOUBLE_MAP, false));
 			chars[(int)map[i][j]]++;
 		}
 	}

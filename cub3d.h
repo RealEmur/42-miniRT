@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: tkul <tkul@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:17:01 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/17 04:58:21 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/17 19:30:15 by tkul             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@
 # define ERR_WINDOW_INITIALILZE "Couldn't initialize window"
 # define ERR_IMAGE_INITIALILZE "Couldn't initialize image"
 # define ERR_XPM_LOAD "Couldn't load xpm file"
+# define ERR_MAP_WALLS "Map is not surrounded by walls"
 
 # define MAP_FILE_EXTENSION ".cub"
 # define MAP_LAYOUT_CHARS " $01WNSE"
@@ -220,6 +221,7 @@ void			render(t_scene *scene);
 void			draw_pixel(t_image	*image, int x, int y, unsigned int color);
 void			draw_background(t_image *image, t_rgb	**rgbs);
 void			clean_all(t_scene *scene);
+void			clean_fd(int fd);
 char			**load_map(int fd, char *firstline, int *line_count);
 char			**ft_strarrdup(char **arr);
 t_rgb			strtorgb(char *str);

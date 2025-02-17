@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   display.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: tkul <tkul@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 07:40:44 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/17 03:20:34 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/17 19:33:51 by tkul             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,9 @@ int	update(void *param)
 	t_timestamp const	current = get_timestamp();
 	const double		delta_time = (current - scene->last_tick) / 1000.0;
 
-	if (delta_time > 0)
-	{
-		scene->last_tick = current;
-		player_movement(scene, &scene->player, delta_time);
-		render(scene);
-	}
+	scene->last_tick = current;
+	player_movement(scene, &scene->player, delta_time);
+	render(scene);
 	return (1);
 }
 
