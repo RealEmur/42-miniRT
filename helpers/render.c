@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:50:26 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/16 16:56:40 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/17 03:43:45 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,8 @@ void	send_ray(t_scene *scene, t_ray *ray, t_position *pos)
 	wall_hit(scene, ray, pos, side_hit);
 }
 
-void	init_ray(t_ray *ray, t_position *pos, t_vector *direction, \
-t_vector *plane)
+void	init_ray(t_ray *ray, t_position *pos, \
+t_vector *direction, t_vector *plane)
 {
 	const double	camera_x = 2 * ray->current_x / (double)WIDTH - 1;
 

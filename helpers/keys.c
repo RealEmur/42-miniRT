@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 18:22:14 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/14 05:26:51 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/17 03:22:01 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_list	*get_key_node(t_list *pressed_keys, int keycode)
 {
 	t_list	*key;
 	int		*ptr_keycode;
-	
+
 	while (pressed_keys)
 	{
 		key = pressed_keys;
@@ -35,10 +35,10 @@ t_list	*get_key_node(t_list *pressed_keys, int keycode)
 
 int	on_key_press(int keycode, void *param)
 {
-	t_list	**const pressed_keys = param;
-	t_list	*lst;
-	int		*keycode_ptr;
-	
+	t_list **const	pressed_keys = param;
+	t_list			*lst;
+	int				*keycode_ptr;
+
 	if (!get_key_node(*pressed_keys, keycode))
 	{
 		keycode_ptr = malloc(sizeof(int));
@@ -48,17 +48,17 @@ int	on_key_press(int keycode, void *param)
 		if (!lst)
 			return (free(keycode_ptr), panic("Malloc Error", NULL, false));
 		ft_lstadd_back(pressed_keys, lst);
-		*keycode_ptr = keycode; 
+		*keycode_ptr = keycode;
 	}
 	return (true);
 }
 
 int	on_key_release(int keycode, void *param)
 {
-	t_list	**const pressed_keys = param;
-	t_list	*lst;
-	t_list	*target;
-	
+	t_list **const	pressed_keys = param;
+	t_list			*lst;
+	t_list			*target;
+
 	target = get_key_node(*pressed_keys, keycode);
 	lst = *pressed_keys;
 	if (!target)
@@ -80,4 +80,3 @@ int	is_key_pressed(t_list *pressed_keys, int keycode)
 {
 	return (get_key_node(pressed_keys, keycode) || 0);
 }
-

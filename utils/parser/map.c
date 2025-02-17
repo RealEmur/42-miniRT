@@ -6,7 +6,7 @@
 /*   By: emyildir <emyildir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 03:09:45 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/14 06:23:31 by emyildir         ###   ########.fr       */
+/*   Updated: 2025/02/17 04:27:21 by emyildir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,13 +84,13 @@ int	extend_map(char **map, int width)
 		while (map[i][++j])
 		{
 			if (map[i][j] == ' ')
-				temp[j] = '$';
+				temp[j] = FILL_CHAR;
 			else
 				temp[j] = map[i][j];
 		}
 		while (j < width)
-			temp[j++] = '$';
-		temp[j++] = '$';
+			temp[j++] = FILL_CHAR;
+		temp[j++] = FILL_CHAR;
 		free(map[i]);
 		map[i] = temp;
 	}
@@ -99,34 +99,29 @@ int	extend_map(char **map, int width)
 
 char	**load_map(int fd, char *firstline, int *line_count)
 {
-	char		*line;
+	void		*temp;
 	char		*buffer;
 	char		*trimmed;
-	char		**map;
 
 	buffer = ft_strdup(firstline);
 	if (!buffer || !str_append(&buffer, "\n"))
 		return (NULL);
-	while (1)
+	while (fd != -1)
 	{
-		line = get_next_line(fd);
-		if (!line)
+		temp = get_next_line(fd);
+		if (!temp)
 			break ;
 		(*line_count)++;
-		trimmed = ft_strtrim(line, " \n");
+		trimmed = ft_strtrim(temp, " \n");
 		if (!trimmed)
-			return (free(line), free(buffer), panic("Trim", NULL, -1), NULL);
+			return (free(temp), free(buffer), panic("Trim", NULL, -1), NULL);
 		if (!*trimmed)
-		{
-			free(trimmed);
-			free(line);
-			break ;
-		}
+			fd = -1;
 		free(trimmed);
-		if (!str_append(&buffer, line))
-			return (free(line), free(buffer), NULL);
-		free(line);
+		if (!str_append(&buffer, temp))
+			return (free(temp), free(buffer), panic("Append", NULL, -1), NULL);
+		free(temp);
 	}
-	map = ft_split(buffer, '\n');
-	return (free(buffer), map);
+	temp = ft_split(buffer, '\n');
+	return (free(buffer), temp);
 }
