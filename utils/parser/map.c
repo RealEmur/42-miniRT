@@ -94,27 +94,21 @@ int	extend_map(char **map, int width)
 char	**load_map(int fd, char *firstline, int *line_count)
 {
 	void		*temp;
+	char		*line;
 	char		*buffer;
-	char		*trimmed;
 
 	buffer = ft_strdup(firstline);
 	if (!buffer || !str_append(&buffer, "\n"))
 		return (NULL);
 	while (fd != -1)
 	{
-		temp = get_next_line(fd);
-		if (!temp)
+		line = get_next_line(fd);
+		if (!line || *line == '\n')
 			break ;
 		(*line_count)++;
-		trimmed = ft_strtrim(temp, " \n");
-		if (!trimmed)
-			return (free(temp), free(buffer), panic("Trim", NULL, -1), NULL);
-		if (!*trimmed)
-			fd = -1;
-		free(trimmed);
-		if (!str_append(&buffer, temp))
-			return (free(temp), free(buffer), panic("Append", NULL, -1), NULL);
-		free(temp);
+		if (!str_append(&buffer, line))
+			return (free(line), free(buffer), panic("Append", NULL, -1), NULL);
+		free(line);
 	}
 	temp = ft_split(buffer, '\n');
 	return (free(buffer), temp);

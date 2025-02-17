@@ -114,7 +114,7 @@ int	parse_map(t_scene *scene, int fd, char *line, int *line_count)
 		line = get_next_line(fd);
 		if (!line)
 			break ;
-		if (ft_strncmp(line, "\n", 2))
+		if (*line != '\n')
 			return (free(line), parser_panic(++(*line_count), "Map File", \
 			ERR_MAP_NOTLAST), false);
 		free(line);
