@@ -6,7 +6,7 @@
 /*   By: tkul <tkul@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 13:16:39 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/17 19:28:25 by tkul             ###   ########.fr       */
+/*   Updated: 2025/02/17 19:44:31 by tkul             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ int	main(int size, char **args)
 		if (!parser(args[1], scene))
 			return (clean_all(scene), EXIT_FAILURE);
 		set_player_data(&scene->player);
-		init_display(scene);
+		if (!init_display(scene))
+			return (clean_all(scene), EXIT_FAILURE);
 		clean_all(scene);
 	}
 	else

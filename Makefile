@@ -28,7 +28,7 @@ UTILS = $(UTILS_PARSER) $(UTILS_RENDER) $(UTILS_PATH)/strings.c $(UTILS_PATH)/ti
 SOURCES = main.c $(UTILS) $(HELPERS)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 
 RM = rm -rf
 

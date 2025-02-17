@@ -6,7 +6,7 @@
 /*   By: tkul <tkul@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 01:10:20 by emyildir          #+#    #+#             */
-/*   Updated: 2025/02/17 19:23:25 by tkul             ###   ########.fr       */
+/*   Updated: 2025/02/17 19:43:50 by tkul             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ int	check_walls(t_map *map, t_player *player)
 
 	if (!flood_fill(map, copied_map, \
 		(int)player->position.x, (int)player->position.y))
-		return (panic("Map Error", ERR_MAP_WALLS, false));
+		return (free_str_arr(copied_map), \
+		panic("Map Error", ERR_MAP_WALLS, false));
 	i = -1;
 	while (++i < map->height)
 	{
